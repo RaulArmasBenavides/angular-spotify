@@ -103,6 +103,10 @@ export class MultimediaService {
     this.audio.play()
   }
 
+  public setVolume(volume:number):void{
+    this.audio.volume = volume;
+  }
+
   public togglePlayer(): void {
     (this.audio.paused) ? this.audio.play() : this.audio.pause()
   }

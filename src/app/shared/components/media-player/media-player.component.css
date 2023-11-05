@@ -152,3 +152,29 @@
     color: var(--color-4);
     font-size: var(--font-size-2);
 }
+
+.volume-bar {
+    background: #ccc;
+    border-radius: 10px;
+    height: 5px;
+    width: 100px; /* o el tamaño que prefieras */
+    position: relative;
+  }
+  
+  .volume-progress {
+    background: #000;
+    height: 5px;
+    border-radius: 10px;
+    width: 0; /* Este valor se establecerá dinámicamente */
+  }
+
+  .volume-slider {
+    position: absolute;
+    background: #fff;
+    height: 15px; /* tamaño del control deslizante */
+    width: 15px; /* tamaño del control deslizante */
+    border-radius: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* centra el control deslizante verticalmente y ajusta la alineación horizontal */
+    cursor: pointer;
+  }

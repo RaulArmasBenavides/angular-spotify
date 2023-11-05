@@ -39,7 +39,7 @@
             <button class="arrow btn">
                 <i class="uil uil-previous"></i>
             </button>
-            <button (click)="multimediaService.togglePlayer()" class="play btn">
+            <button (click)="togglePlayer()" class="play btn">
                 <i [ngClass]="{
                     'uil-play-circle':state === 'paused',
                     'uil-pause-circle':state !== 'paused'
@@ -71,7 +71,17 @@
             <i class="uil uil-boombox"></i>
         </button>
         <button class="btn-media">
-            <i class="uil uil-volume-off"></i>
+            <i class="uil uil-volume"></i>
         </button>
+        <div class="volume-bar" (click)="onBarClick($event)"
+        (mousedown)="onDragStart($event)"
+        (document:mousemove)="onDragMove($event)"
+        (document:mouseup)="onDragEnd($event)"
+        (touchstart)="onDragStart($event)"
+        (document:touchmove)="onDragMove($event)"
+        (document:touchend)="onDragEnd($event)">
+            <div class="volume-progress" [style.width] ="volume + '%'"></div>
+            <div class="volume-slider" [style.left] ="volume + '%'"></div>
+        </div>
     </div>
 </ng-template>
