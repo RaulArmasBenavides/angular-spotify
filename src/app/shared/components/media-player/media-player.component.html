@@ -77,6 +77,7 @@
         (mousedown)="onDragStart($event)"
         (document:mousemove)="onDragMove($event)"
         (document:mouseup)="onDragEnd($event)"
+        (mouseleave)="onDragEnd($event)"
         (touchstart)="onDragStart($event)"
         (document:touchmove)="onDragMove($event)"
         (document:touchend)="onDragEnd($event)">

@@ -13,9 +13,11 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
   listObservers$: Array<Subscription> = []
   state: string = 'paused'
   constructor(public multimediaService: MultimediaService) { }
+  @ViewChild('slider') slider!: ElementRef;
+  maxVolume: number = 100;
   volume: number = 50;
   ngOnInit(): void {
-console.log(this.volume);
+ 
     const observer1$ = this.multimediaService.playerStatus$
       .subscribe(status => this.state = status)
     this.listObservers$ = [observer1$]
@@ -53,6 +55,25 @@ console.log(this.volume);
   }
 
   onBarClick(event: MouseEvent): void {
+    const target = (event as MouseEvent).target  ;
+
+    // Si el target es el volume-slider, no hagas nada
+    if ((target as Element).classList.contains('volume-slider')) {
+      event.preventDefault();
+      event.stopPropagation();
+  
+      let newVolume = this.calculateVolume(event);
+      // Restringe el volumen a estar entre 0 y 100
+      if (newVolume < 0) {
+        newVolume = 0;
+      } else if (newVolume > 100) {
+        newVolume = 100;
+      }
+        // Asigna el nuevo volumen
+    this.volume = newVolume;
+    this.setVolume(newVolume);
+      return;
+    }
     const rect = (event.target as HTMLElement).getBoundingClientRect();
     const clickedPosition = event.clientX - rect.left; // Posición X del clic dentro del elemento
     const width = rect.width; // Ancho total de la barra de volumen
@@ -63,39 +84,77 @@ console.log(this.volume);
   isDragging = false;
 
 onDragStart(event: MouseEvent | TouchEvent): void {
-
+ 
   this.isDragging = true;
-  this.updateVolume(event);
+  // this.updateVolume(event);
 }
 
 onDragMove(event: MouseEvent | TouchEvent): void {
+  if (!this.isDragging) return;
 
-  if (this.isDragging) {
-    // console.log(event);
-    this.updateVolume(event);
+  let newVolume = this.calculateVolume(event);
+ 
+  // Restringe el volumen a estar entre 0 y 100
+  if (newVolume < 0) {
+    newVolume = 0;
+  } else if (newVolume > 100) {
+    newVolume = 100;
   }
+
+  // Asigna el nuevo volumen
+  this.volume = newVolume;
+  this.setVolume(newVolume);
+  // if (this.isDragging) {
+  //   // console.log(event);
+  //   this.updateVolume(event);
+  // }
 }
 
 private updateVolume(event: MouseEvent | TouchEvent): void {
   event.preventDefault(); // Previene comportamientos por defecto como el arrastre de imágenes o selección de texto
-  // Normaliza el evento en caso de que sea un evento touch
   const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
-
   const volumeBar = document.querySelector('.volume-bar') as HTMLElement;
-  if(volumeBar) {
-    const rect = volumeBar.getBoundingClientRect();
-    console.log(rect);
-    const clickedPosition = clientX - rect.left; // Posición X del clic dentro del elemento
-    const width = rect.width; // Ancho total de la barra de volumen
-    const newVolume = (clickedPosition / width) * 100;
-    this.setVolume(newVolume);
+  const { left, width } = volumeBar.getBoundingClientRect();
+  const clickX = clientX - left;
+  const volume = (clickX / width) * 100;
     // this.isDragging = false;
-  }
+   
+}
+
+
+calculateVolume(event: MouseEvent | TouchEvent): number {
+  event.preventDefault(); // Previene comportamientos por defecto como el arrastre de imágenes o selección de texto
+  const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+  const volumeBar = document.querySelector('.volume-bar') as HTMLElement;
+  const { left, width } = volumeBar.getBoundingClientRect();
+  const clickX = clientX - left;
+  const volume = (clickX / width) * 100;
+  
+  return volume;
 }
 onDragEnd(event: MouseEvent | TouchEvent): void {
-  if (this.isDragging){
-    this.isDragging = false;
+
+  const target = (event as MouseEvent).target || (event as TouchEvent).changedTouches[0].target;
+
+  // Si el target es el volume-slider, no hagas nada
+  if ((target as Element).classList.contains('volume-slider')) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    let newVolume = this.calculateVolume(event);
+    // Restringe el volumen a estar entre 0 y 100
+    if (newVolume < 0) {
+      newVolume = 0;
+    } else if (newVolume > 100) {
+      newVolume = 100;
+    }
+      // Asigna el nuevo volumen
+  this.volume = newVolume;
+  this.setVolume(newVolume);
+    return;
   }
+
+  this.isDragging = false;
 
 }
 
@@ -110,13 +169,13 @@ onDragEnd(event: MouseEvent | TouchEvent): void {
   //   this.onDragMove(event);
   // }
 
-  // @HostListener('document:touchend', ['$event'])
-  // onDocumentTouchEnd(event: TouchEvent): void {
-  //   this.onDragEnd(event);
-  // }
+  //  @HostListener('document:touchend', ['$event'])
+  //  onDocumentTouchEnd(event: TouchEvent): void {
+  //    this.onDragEnd(event);
+  //  }
 
-  // @HostListener('document:touchmove', ['$event'])
-  // onDocumentTouchMove(event: TouchEvent): void {
-  //   this.onDragMove(event);
-  // }
+  //  @HostListener('document:touchmove', ['$event'])
+  //  onDocumentTouchMove(event: TouchEvent): void {
+  //    this.onDragMove(event);
+  //  }
 }
