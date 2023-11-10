@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TrackModel } from '@core/models/tracks.model';
+import { MultimediaService } from '@shared/services/multimedia.service';
 
 
 @Component({
@@ -10,10 +11,10 @@ import { TrackModel } from '@core/models/tracks.model';
 export class PlayListBodyComponent implements OnInit {
   @Input() tracks: TrackModel[] = []
   optionSort: { property: string | null, order: string } = { property: null, order: 'asc' }
-  constructor() { }
+  constructor(public multimediaService: MultimediaService) { }
 
   ngOnInit(): void {
-    console.log(this.tracks);
+ 
   }
 
   changeSort(property: string): void {
@@ -23,5 +24,10 @@ export class PlayListBodyComponent implements OnInit {
       order: order === 'asc' ? 'desc' : 'asc'
     }
     console.log(this.optionSort);
+  }
+
+  sendPlay(track: TrackModel): void {
+    this.multimediaService.trackInfo$.next(track);
+
   }
 }

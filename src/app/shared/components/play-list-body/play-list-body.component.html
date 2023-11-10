@@ -1,11 +1,16 @@
 <div class="play-list-body">
     <ul class="play-list-table-header">
-        <li (click)="changeSort('name')">Nombre ❤</li>
-        <li (click)="changeSort('album')">álbum 🆗</li>
-        <li>fecha incorporación 🍌😁</li>
+        <li (click)="changeSort('id')"> #</li>
+        <li (click)="changeSort('name')">Título</li>
+        <li (click)="changeSort('album')">álbum</li>
+        <li>Fecha en que se agregó</li>
         <li><i class="uil uil-clock-eight"></i></li>
     </ul>
     <ul class="play-list-rows" *ngFor="let track of tracks |orderList:optionSort.property:optionSort.order">
+        <li class="track-id">
+            {{track._id}}
+            <i class="uil " [ngClass]="{'uil-play':true}"></i>
+        </li>
         <li class="track-name">
             <ng-container *ngTemplateOutlet="coverSection;context:{track:track}"></ng-container>
         </li>
@@ -16,7 +21,7 @@
             {{track.album}}
         </li>
         <li class="track-name-opacity">
-            {{track.album}}
+            {{track.duration?.end}} 
         </li>
 
     </ul>
@@ -25,11 +30,12 @@
 <!--template del cover-->
 <ng-template #coverSection let-track="track">
 
-    <div class="cover-section">
+    <div class="cover-section" (click)="sendPlay(track)">
         <img appImgBroken class="cover-track" [src]="track.cover" [alt]="track.name">
         <div class="cover-info">
             <div class="name-track">{{track.name}}</div>
             <div class="name-track-details">{{track.artist.name}}</div>
+    
         </div>
     </div>
 

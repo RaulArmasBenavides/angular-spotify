@@ -17,7 +17,7 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
   maxVolume: number = 100;
   volume: number = 50;
   ngOnInit(): void {
- 
+    console.log("gaa");
     const observer1$ = this.multimediaService.playerStatus$
       .subscribe(status => this.state = status)
     this.listObservers$ = [observer1$]

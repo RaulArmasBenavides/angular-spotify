@@ -21,6 +21,8 @@ export class MultimediaService {
     this.audio = new Audio()
 
     this.trackInfo$.subscribe(responseOK => {
+
+      console.log("llama");
       if (responseOK) {
         this.setAudio(responseOK)
       }

@@ -5,6 +5,13 @@ export interface TrackModel {
     album: string;
     cover: string;
     url: string;
+   
     _id: string | number;
     artist?: ArtistModel;
+    duration?:Duration;
+}
+
+export interface Duration {
+    start:string;
+    end:string;
 }
