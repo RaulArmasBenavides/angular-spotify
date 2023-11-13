@@ -42,8 +42,18 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
 
 
   togglePlayer(){
- 
     this.multimediaService.togglePlayer();
+  }
+
+  LastVolumSelected:number = 0;
+  toggleVolume(){
+    if(this.volume >0){
+      this.LastVolumSelected= this.volume;
+      this.volume = 0;
+    }else{
+      this.volume = this.LastVolumSelected;
+    }
+    this.setVolume(this.volume);
   }
 
   setVolume(newVolume: number) {
