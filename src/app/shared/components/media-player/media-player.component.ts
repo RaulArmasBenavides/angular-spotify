@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs'; //TODO: Programacion reactiva!
 export class MediaPlayerComponent implements OnInit, OnDestroy {
   @ViewChild('progressBar') progressBar: ElementRef = new ElementRef('')
   listObservers$: Array<Subscription> = []
-  state: string = 'paused'
+  state: string = 'paused';
   constructor(public multimediaService: MultimediaService) { }
   @ViewChild('slider') slider!: ElementRef;
   maxVolume: number = 100;

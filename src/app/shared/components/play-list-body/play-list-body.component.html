@@ -6,10 +6,13 @@
         <li>Fecha en que se agregó</li>
         <li><i class="uil uil-clock-eight"></i></li>
     </ul>
-    <ul class="play-list-rows" *ngFor="let track of tracks |orderList:optionSort.property:optionSort.order">
+    <ul class="play-list-rows" *ngFor="let track of tracks |orderList:optionSort.property:optionSort.order" (click)="sendPlay(track)">
         <li class="track-id">
             {{track._id}}
-            <i class="uil " [ngClass]="{'uil-play':true}"></i>
+            <i [ngClass]="{
+                'uil-play-circle':currentPlayingId !== track._id && isalreadySelected,
+                'uil-pause-circle':currentPlayingId === track._id 
+            }" class="uil "></i>
         </li>
         <li class="track-name">
             <ng-container *ngTemplateOutlet="coverSection;context:{track:track}"></ng-container>
@@ -30,7 +33,7 @@
 <!--template del cover-->
 <ng-template #coverSection let-track="track">
 
-    <div class="cover-section" (click)="sendPlay(track)">
+    <div class="cover-section" >
         <img appImgBroken class="cover-track" [src]="track.cover" [alt]="track.name">
         <div class="cover-info">
             <div class="name-track">{{track.name}}</div>

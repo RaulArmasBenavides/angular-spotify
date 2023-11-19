@@ -11,10 +11,15 @@ import { MultimediaService } from '@shared/services/multimedia.service';
 export class PlayListBodyComponent implements OnInit {
   @Input() tracks: TrackModel[] = []
   optionSort: { property: string | null, order: string } = { property: null, order: 'asc' }
+    // El ID del track actualmente en reproducción
+    currentPlayingId:number=0;
+    isalreadySelected: boolean = true;
   constructor(public multimediaService: MultimediaService) { }
-
+  state: string = 'paused';
   ngOnInit(): void {
- 
+    const observer1$ = this.multimediaService.playerStatus$
+    .subscribe(status => this.state = status)
+  // this.listObservers$ = [observer1$]
   }
 
   changeSort(property: string): void {
@@ -27,7 +32,19 @@ export class PlayListBodyComponent implements OnInit {
   }
 
   sendPlay(track: TrackModel): void {
-    this.multimediaService.trackInfo$.next(track);
+    if (this.currentPlayingId === track._id) {
+      // this.currentPlayingId = 0;
+      // this.isalreadySelected = true;
+    
+      this.multimediaService.togglePlayer();
+      // Añadir lógica de pausa aquí si es necesario
+    } else {
+      // this.isalreadySelected = false;
+      this.currentPlayingId = Number(track._id);
+      this.multimediaService.trackInfo$.next(track);
+      // Añadir lógica de reproducción aquí si es necesario
+    }
 
   }
+
 }
