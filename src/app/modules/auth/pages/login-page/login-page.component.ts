@@ -39,13 +39,15 @@ export class LoginPageComponent implements OnInit {
       //TODO: 200 <400
       .subscribe(responseOk => { //TODO: Cuando el usuario credenciales Correctas ✔✔
         console.log('Session iniciada correcta', responseOk);
-        const { tokenSession, data } = responseOk
+        const { tokenSession, data ,usuarioDB} = responseOk;
         this.cookie.set('token', tokenSession, 4, '/') //TODO:📌📌📌📌
+        localStorage.setItem('USERNAME',usuarioDB.name);
+        localStorage.setItem('USERID',usuarioDB._id)
         this.router.navigate(['/', 'tracks'])
       },
         err => {//TODO error 400>=
           this.errorSession = true
-          console.log('⚠⚠⚠⚠Ocurrio error con tu email o password');
+          console.error('⚠⚠⚠⚠Ocurrio error con tu email o password');
         })
 
   }

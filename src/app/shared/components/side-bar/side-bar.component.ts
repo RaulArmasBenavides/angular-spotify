@@ -32,7 +32,7 @@ export class SideBarComponent implements OnInit {
         name: 'Tu biblioteca',
         icon: 'uil uil-chart',
         router: ['/', 'favorites'],
-        query: { hola: 'mundo' }
+        // query: { IdUser: 'mundo' }
       }
     ]
 
