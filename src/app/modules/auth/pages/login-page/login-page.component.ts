@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class LoginPageComponent implements OnInit {
   errorSession: boolean = false
   formLogin: FormGroup = new FormGroup({});
-
+  passwordFieldType: string = 'password';
   constructor(private authService: AuthService, private cookie: CookieService,
     private router: Router) { }
 
@@ -50,6 +50,10 @@ export class LoginPageComponent implements OnInit {
           console.error('⚠⚠⚠⚠Ocurrio error con tu email o password');
         })
 
+  }
+
+  togglePasswordVisibility() {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
 }

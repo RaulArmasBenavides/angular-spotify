@@ -26,7 +26,14 @@
     align-items: center;
     align-content: center;
     padding: 0 0 0 .75rem;
+ 
+    overflow: hidden;    /* Oculta el texto desbordado */
+    text-overflow: ellipsis;
 }
+/* .card-player.player-small .content-player {
+    white-space: nowrap;
+} */
+
 
 .card-player .buttons-player {
     opacity: 0;

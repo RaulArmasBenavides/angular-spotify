@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, mergeMap, tap, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { CustomPlaylist, PlaylistDetail } from '@core/models/playlist.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +17,7 @@ export class TrackService {
 
   /**
    * 
-   * @returns Devolver todas las canciones! molonas! 🤘🤘
+   * @returns Devolver todas las canciones
    */
 
   private skipById(listTracks: TrackModel[], id: number): Promise<TrackModel[]> {
@@ -58,4 +59,15 @@ export class TrackService {
         })
       )
   }
+
+
+  getCustomPlaylists(userId: string): Observable<CustomPlaylist[]> {
+    return this.http.get<CustomPlaylist[]>(`${this.URL}/users/${userId}/customplaylists`);
+  }
+
+  getPlaylistDetail(playlistId: string): Observable<PlaylistDetail> {
+    return this.http.get<PlaylistDetail>(`${this.URL}/playlists/${playlistId}`);
+  }
+
+ 
 }

@@ -27,7 +27,6 @@
 }
 
 .login-auth-page .social-btn {
-    border: 0;
     padding: .5rem 2rem;
     width: 100%;
     font-size: var(--font-size-2);
@@ -107,3 +106,23 @@
 input.ng-invalid.ng-touched {
     border: solid 2px red !important
 }
+
+
+.password-input-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .toggle-password-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .toggle-password-btn i {
+    font-size: 1.2em;
+  }
