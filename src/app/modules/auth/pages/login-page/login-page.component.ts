@@ -7,53 +7,54 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.css']
+  styleUrls: ['./login-page.component.css'],
 })
 export class LoginPageComponent implements OnInit {
-  errorSession: boolean = false
+  errorSession: boolean = false;
   formLogin: FormGroup = new FormGroup({});
   passwordFieldType: string = 'password';
-  constructor(private authService: AuthService, private cookie: CookieService,
-    private router: Router) { }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly cookie: CookieService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.formLogin = new FormGroup(
-      {
-        email: new FormControl('', [
-          Validators.required,
-          Validators.email
-        ]),
-        password: new FormControl('',
-          [
-            Validators.required,
-            Validators.minLength(6),
-            Validators.maxLength(12)
-          ])
-      }
-    )
+    this.formLogin = new FormGroup({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(12),
+      ]),
+    });
   }
 
   sendLogin(): void {
-    const { email, password } = this.formLogin.value
-    this.authService.sendCredentials(email, password)
+    const { email, password } = this.formLogin.value;
+    this.authService
+      .sendCredentials(email, password)
       //TODO: 200 <400
-      .subscribe(responseOk => { //TODO: Cuando el usuario credenciales Correctas ✔✔
-        console.log('Session iniciada correcta', responseOk);
-        const { tokenSession, data ,usuarioDB} = responseOk;
-        this.cookie.set('token', tokenSession, 4, '/') //TODO:📌📌📌📌
-        localStorage.setItem('USERNAME',usuarioDB.name);
-        localStorage.setItem('USERID',usuarioDB._id)
-        this.router.navigate(['/', 'tracks'])
-      },
-        err => {//TODO error 400>=
-          this.errorSession = true
+      .subscribe(
+        (responseOk) => {
+          //TODO: Cuando el usuario credenciales Correctas ✔✔
+          console.log('Session iniciada correcta', responseOk);
+          const { tokenSession, data, usuarioDB } = responseOk;
+          this.cookie.set('token', tokenSession, 4, '/'); //TODO:📌📌📌📌
+          localStorage.setItem('USERNAME', usuarioDB.name);
+          localStorage.setItem('USERID', usuarioDB._id);
+          this.router.navigate(['/', 'tracks']);
+        },
+        (err) => {
+          //TODO error 400>=
+          this.errorSession = true;
           console.error('⚠⚠⚠⚠Ocurrio error con tu email o password');
-        })
-
+        }
+      );
   }
 
   togglePasswordVisibility() {
-    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+    this.passwordFieldType =
+      this.passwordFieldType === 'password' ? 'text' : 'password';
   }
-
 }
