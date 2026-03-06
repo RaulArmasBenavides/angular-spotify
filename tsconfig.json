@@ -27,11 +27,7 @@
       "@shared/*": [
         "src/app/shared/*"
       ]
-    },
-    "lib": [
-      "es2022",
-      "dom"
-    ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
