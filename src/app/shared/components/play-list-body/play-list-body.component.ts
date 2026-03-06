@@ -4,9 +4,10 @@ import { MultimediaService } from '@shared/services/multimedia.service';
 
 
 @Component({
-  selector: 'app-play-list-body',
-  templateUrl: './play-list-body.component.html',
-  styleUrls: ['./play-list-body.component.css']
+    selector: 'app-play-list-body',
+    templateUrl: './play-list-body.component.html',
+    styleUrls: ['./play-list-body.component.css'],
+    standalone: false
 })
 export class PlayListBodyComponent implements OnInit {
   @Input() tracks: TrackModel[] = []

@@ -4,9 +4,10 @@ import { PlaylistDetail } from '@core/models/playlist.model';
 import { TrackService } from '@modules/tracks/services/track.service';
 
 @Component({
-  selector: 'app-side-bar',
-  templateUrl: './side-bar.component.html',
-  styleUrls: ['./side-bar.component.css']
+    selector: 'app-side-bar',
+    templateUrl: './side-bar.component.html',
+    styleUrls: ['./side-bar.component.css'],
+    standalone: false
 })
 export class SideBarComponent implements OnInit {
 

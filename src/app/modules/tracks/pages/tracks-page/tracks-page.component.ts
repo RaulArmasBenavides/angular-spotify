@@ -4,9 +4,10 @@ import { TrackModel } from '@core/models/tracks.model';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-tracks-page',
-  templateUrl: './tracks-page.component.html',
-  styleUrls: ['./tracks-page.component.css']
+    selector: 'app-tracks-page',
+    templateUrl: './tracks-page.component.html',
+    styleUrls: ['./tracks-page.component.css'],
+    standalone: false
 })
 export class TracksPageComponent implements OnInit, OnDestroy {
 
