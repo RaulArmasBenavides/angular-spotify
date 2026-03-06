@@ -1,9 +1,10 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { LoginPageComponent } from './login-page.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
@@ -11,12 +12,10 @@ describe('LoginPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule
-      ],
-      declarations: [LoginPageComponent]
-    })
+    declarations: [LoginPageComponent],
+    imports: [RouterTestingModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .compileComponents();
   });
 
