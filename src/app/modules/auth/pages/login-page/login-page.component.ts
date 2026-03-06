@@ -1,14 +1,18 @@
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@modules/auth/services/auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-login-page',
-    templateUrl: './login-page.component.html',
-    styleUrls: ['./login-page.component.css'],
-    standalone: false
+  selector: 'app-login-page',
+  templateUrl: './login-page.component.html',
+  styleUrls: ['./login-page.component.css'],
+  standalone: false,
 })
 export class LoginPageComponent implements OnInit {
   errorSession: boolean = false;
@@ -17,12 +21,15 @@ export class LoginPageComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly cookie: CookieService,
-    private readonly router: Router
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
     this.formLogin = new UntypedFormGroup({
-      email: new UntypedFormControl('', [Validators.required, Validators.email]),
+      email: new UntypedFormControl('', [
+        Validators.required,
+        Validators.email,
+      ]),
       password: new UntypedFormControl('', [
         Validators.required,
         Validators.minLength(6),
@@ -50,7 +57,7 @@ export class LoginPageComponent implements OnInit {
           //TODO error 400>=
           this.errorSession = true;
           console.error('⚠⚠⚠⚠Ocurrio error con tu email o password');
-        }
+        },
       );
   }
 
