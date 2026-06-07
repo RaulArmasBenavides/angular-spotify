@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TrackModel } from '@core/models/tracks.model';
+import { AppStateService } from '@core/store/app-state.service';
 import { MultimediaService } from '@shared/services/multimedia.service';
-
 
 @Component({
     selector: 'app-play-list-body',
@@ -10,42 +10,38 @@ import { MultimediaService } from '@shared/services/multimedia.service';
     standalone: false
 })
 export class PlayListBodyComponent implements OnInit {
-  @Input() tracks: TrackModel[] = []
-  optionSort: { property: string | null, order: string } = { property: null, order: 'asc' }
-    // El ID del track actualmente en reproducción
-    currentPlayingId:number=0;
-    isalreadySelected: boolean = true;
-  constructor(public multimediaService: MultimediaService) { }
-  state: string = 'paused';
+  @Input() tracks: TrackModel[] = [];
+  optionSort: { property: string | null, order: string } = { property: null, order: 'asc' };
+  currentPlayingId: number = 0;
+  isalreadySelected: boolean = true;
+
+  get isPlaying$() {
+    return this.appState.isPlaying$;
+  }
+
+  constructor(
+    public multimediaService: MultimediaService,
+    private appState: AppStateService
+  ) { }
+
   ngOnInit(): void {
-    const observer1$ = this.multimediaService.playerStatus$
-    .subscribe(status => this.state = status)
-  // this.listObservers$ = [observer1$]
   }
 
   changeSort(property: string): void {
-    const { order } = this.optionSort
+    const { order } = this.optionSort;
     this.optionSort = {
       property,
       order: order === 'asc' ? 'desc' : 'asc'
-    }
-    console.log(this.optionSort);
+    };
   }
 
   sendPlay(track: TrackModel): void {
     if (this.currentPlayingId === track._id) {
-      // this.currentPlayingId = 0;
-      // this.isalreadySelected = true;
-    
       this.multimediaService.togglePlayer();
-      // Añadir lógica de pausa aquí si es necesario
     } else {
-      // this.isalreadySelected = false;
       this.currentPlayingId = Number(track._id);
-      this.multimediaService.trackInfo$.next(track);
-      // Añadir lógica de reproducción aquí si es necesario
+      this.appState.setCurrentTrack(track);
     }
-
   }
 
 }

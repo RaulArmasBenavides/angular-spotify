@@ -6,12 +6,27 @@ import { AppStateService } from '@core/store/app-state.service';
   providedIn: 'root'
 })
 export class MultimediaService {
-  public trackInfo$ = this.appState.currentTrack$;
-  public timeElapsed$ = this.appState.timeElapsed$;
-  public timeRemaining$ = this.appState.timeRemaining$;
-  public playerStatus$ = this.appState.isPlaying$;
-  public playerPercentage$ = this.appState.playerPercentage$;
   public audio!: HTMLAudioElement;
+
+  get trackInfo$() {
+    return this.appState.currentTrack$;
+  }
+
+  get timeElapsed$() {
+    return this.appState.timeElapsed$;
+  }
+
+  get timeRemaining$() {
+    return this.appState.timeRemaining$;
+  }
+
+  get playerStatus$() {
+    return this.appState.isPlaying$;
+  }
+
+  get playerPercentage$() {
+    return this.appState.playerPercentage$;
+  }
 
   constructor(private appState: AppStateService) {
     this.audio = new Audio();

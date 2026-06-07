@@ -41,8 +41,8 @@
       </button>
       <button (click)="togglePlayer()" class="play btn">
                 <i [ngClass]="{
-                    'uil-play-circle':state === 'paused',
-                    'uil-pause-circle':state !== 'paused'
+                    'uil-play-circle': !(isPlaying$ | async),
+                    'uil-pause-circle': (isPlaying$ | async)
                 }" class="uil "></i>
       </button>
       <button class="arrow btn">

@@ -10,31 +10,45 @@ export class AppStateService {
   private state$ = new BehaviorSubject<AppState>(initialAppState);
 
   // Player observables
-  currentTrack$: Observable<TrackModel | null> = new BehaviorSubject(null);
-  isPlaying$: Observable<boolean> = new BehaviorSubject(false);
-  timeElapsed$: Observable<string> = new BehaviorSubject('00:00');
-  timeRemaining$: Observable<string> = new BehaviorSubject('-00:00');
-  playerPercentage$: Observable<number> = new BehaviorSubject(0);
-  volume$: Observable<number> = new BehaviorSubject(0.5);
+  private currentTrackSubject$ = new BehaviorSubject<TrackModel | null>(null);
+  currentTrack$: Observable<TrackModel | null> = this.currentTrackSubject$.asObservable();
+
+  private isPlayingSubject$ = new BehaviorSubject<boolean>(false);
+  isPlaying$: Observable<boolean> = this.isPlayingSubject$.asObservable();
+
+  private timeElapsedSubject$ = new BehaviorSubject<string>('00:00');
+  timeElapsed$: Observable<string> = this.timeElapsedSubject$.asObservable();
+
+  private timeRemainingSubject$ = new BehaviorSubject<string>('-00:00');
+  timeRemaining$: Observable<string> = this.timeRemainingSubject$.asObservable();
+
+  private playerPercentageSubject$ = new BehaviorSubject<number>(0);
+  playerPercentage$: Observable<number> = this.playerPercentageSubject$.asObservable();
+
+  private volumeSubject$ = new BehaviorSubject<number>(0.5);
+  volume$: Observable<number> = this.volumeSubject$.asObservable();
 
   // Auth observables
-  isAuthenticated$: Observable<boolean> = new BehaviorSubject(false);
-  userId$: Observable<string | null> = new BehaviorSubject(null);
-  username$: Observable<string | null> = new BehaviorSubject(null);
+  private isAuthenticatedSubject$ = new BehaviorSubject<boolean>(false);
+  isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject$.asObservable();
+
+  private userIdSubject$ = new BehaviorSubject<string | null>(null);
+  userId$: Observable<string | null> = this.userIdSubject$.asObservable();
+
+  private usernameSubject$ = new BehaviorSubject<string | null>(null);
+  username$: Observable<string | null> = this.usernameSubject$.asObservable();
 
   // Search observables
-  searchQuery$: Observable<string> = new BehaviorSubject('');
-  searchResults$: Observable<TrackModel[]> = new BehaviorSubject([]);
-  searchHistory$: Observable<string[]> = new BehaviorSubject([]);
+  private searchQuerySubject$ = new BehaviorSubject<string>('');
+  searchQuery$: Observable<string> = this.searchQuerySubject$.asObservable();
+
+  private searchResultsSubject$ = new BehaviorSubject<TrackModel[]>([]);
+  searchResults$: Observable<TrackModel[]> = this.searchResultsSubject$.asObservable();
+
+  private searchHistorySubject$ = new BehaviorSubject<string[]>([]);
+  searchHistory$: Observable<string[]> = this.searchHistorySubject$.asObservable();
 
   constructor() {
-    this.initializeObservables();
-  }
-
-  private initializeObservables(): void {
-    this.currentTrack$ = this.state$.asObservable().pipe(
-      // map(state => state.player.currentTrack)
-    );
   }
 
   // Player actions
@@ -44,7 +58,7 @@ export class AppStateService {
       ...state,
       player: { ...state.player, currentTrack: track }
     });
-    (this.currentTrack$ as BehaviorSubject<TrackModel | null>).next(track);
+    this.currentTrackSubject$.next(track);
   }
 
   setIsPlaying(isPlaying: boolean): void {
@@ -53,7 +67,7 @@ export class AppStateService {
       ...state,
       player: { ...state.player, isPlaying }
     });
-    (this.isPlaying$ as BehaviorSubject<boolean>).next(isPlaying);
+    this.isPlayingSubject$.next(isPlaying);
   }
 
   setTimeElapsed(time: string): void {
@@ -62,7 +76,7 @@ export class AppStateService {
       ...state,
       player: { ...state.player, timeElapsed: time }
     });
-    (this.timeElapsed$ as BehaviorSubject<string>).next(time);
+    this.timeElapsedSubject$.next(time);
   }
 
   setTimeRemaining(time: string): void {
@@ -71,7 +85,7 @@ export class AppStateService {
       ...state,
       player: { ...state.player, timeRemaining: time }
     });
-    (this.timeRemaining$ as BehaviorSubject<string>).next(time);
+    this.timeRemainingSubject$.next(time);
   }
 
   setPlayerPercentage(percentage: number): void {
@@ -80,7 +94,7 @@ export class AppStateService {
       ...state,
       player: { ...state.player, percentage }
     });
-    (this.playerPercentage$ as BehaviorSubject<number>).next(percentage);
+    this.playerPercentageSubject$.next(percentage);
   }
 
   setVolume(volume: number): void {
@@ -89,7 +103,7 @@ export class AppStateService {
       ...state,
       player: { ...state.player, volume }
     });
-    (this.volume$ as BehaviorSubject<number>).next(volume);
+    this.volumeSubject$.next(volume);
   }
 
   // Auth actions
@@ -104,9 +118,9 @@ export class AppStateService {
         token: token || null
       }
     });
-    (this.isAuthenticated$ as BehaviorSubject<boolean>).next(isAuthenticated);
-    (this.userId$ as BehaviorSubject<string | null>).next(userId || null);
-    (this.username$ as BehaviorSubject<string | null>).next(username || null);
+    this.isAuthenticatedSubject$.next(isAuthenticated);
+    this.userIdSubject$.next(userId || null);
+    this.usernameSubject$.next(username || null);
   }
 
   logout(): void {
@@ -121,7 +135,7 @@ export class AppStateService {
       ...state,
       search: { ...state.search, query }
     });
-    (this.searchQuery$ as BehaviorSubject<string>).next(query);
+    this.searchQuerySubject$.next(query);
   }
 
   setSearchResults(results: TrackModel[]): void {
@@ -130,7 +144,7 @@ export class AppStateService {
       ...state,
       search: { ...state.search, results }
     });
-    (this.searchResults$ as BehaviorSubject<TrackModel[]>).next(results);
+    this.searchResultsSubject$.next(results);
   }
 
   addToSearchHistory(query: string): void {
@@ -140,17 +154,17 @@ export class AppStateService {
       ...state,
       search: { ...state.search, history }
     });
-    (this.searchHistory$ as BehaviorSubject<string[]>).next(history);
+    this.searchHistorySubject$.next(history);
   }
 
   // Reset player state
   private resetPlayer(): void {
     const initialPlayer = initialAppState.player;
-    (this.currentTrack$ as BehaviorSubject<TrackModel | null>).next(null);
-    (this.isPlaying$ as BehaviorSubject<boolean>).next(false);
-    (this.timeElapsed$ as BehaviorSubject<string>).next(initialPlayer.timeElapsed);
-    (this.timeRemaining$ as BehaviorSubject<string>).next(initialPlayer.timeRemaining);
-    (this.playerPercentage$ as BehaviorSubject<number>).next(0);
+    this.currentTrackSubject$.next(null);
+    this.isPlayingSubject$.next(false);
+    this.timeElapsedSubject$.next(initialPlayer.timeElapsed);
+    this.timeRemainingSubject$.next(initialPlayer.timeRemaining);
+    this.playerPercentageSubject$.next(0);
   }
 
   // Getters for current state
