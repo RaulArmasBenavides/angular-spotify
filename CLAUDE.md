@@ -106,8 +106,36 @@ Feature modules are lazily loaded via `loadChildren()` in the main router:
 - Session token is stored via `ngx-cookie-service`
 
 #### State Management
-- `BehaviorSubject` is used for observable state (e.g., `MultimediaService` manages player state)
-- Components subscribe to observables and use the async pipe for template binding
+The application uses a **centralized state management system** with `AppStateService` to manage all global state in a single location:
+
+```typescript
+// src/app/core/store/app-state.service.ts
+```
+
+**State Structure:**
+- **PlayerState** — Current track, play status, time, volume
+- **AuthState** — Authentication status, user info, token
+- **SearchState** — Query, results, history
+
+**Usage in Components:**
+```typescript
+constructor(private appState: AppStateService) {}
+
+// Read state
+this.appState.currentTrack$.subscribe(track => { ... });
+this.appState.isAuthenticated$.subscribe(isAuth => { ... });
+
+// Update state
+this.appState.setCurrentTrack(track);
+this.appState.setAuthenticated(true, userId, username, token);
+this.appState.setSearchQuery('query');
+```
+
+**Why Centralized State:**
+- Single source of truth for all app state
+- Easier to track and debug state changes
+- Services share state through AppStateService instead of multiple BehaviorSubjects
+- Facilitates future migration to NgRx if the app grows
 
 #### Audio/Multimedia Control
 `MultimediaService` in `src/app/shared/services/` centralizes audio control:

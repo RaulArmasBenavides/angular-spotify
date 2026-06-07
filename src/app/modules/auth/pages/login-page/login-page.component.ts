@@ -18,6 +18,7 @@ export class LoginPageComponent implements OnInit {
   errorSession: boolean = false;
   formLogin: UntypedFormGroup = new UntypedFormGroup({});
   passwordFieldType: string = 'password';
+
   constructor(
     private readonly authService: AuthService,
     private readonly cookie: CookieService,
@@ -39,29 +40,25 @@ export class LoginPageComponent implements OnInit {
   }
 
   sendLogin(): void {
+    if (!this.formLogin.valid) return;
+
     const { email, password } = this.formLogin.value;
-    this.authService
-      .sendCredentials(email, password)
-      //TODO: 200 <400
-      .subscribe(
-        (responseOk) => {
-          //TODO: Cuando el usuario credenciales Correctas ✔✔
-          console.log('Session iniciada correcta', responseOk);
-          const { tokenSession, data, usuarioDB } = responseOk;
-          this.cookie.set('token', tokenSession, 4, '/'); //TODO:📌📌📌📌
-          localStorage.setItem('USERNAME', usuarioDB.name);
-          localStorage.setItem('USERID', usuarioDB._id);
-          this.router.navigate(['/', 'tracks']);
-        },
-        (err) => {
-          //TODO error 400>=
-          this.errorSession = true;
-          console.error('⚠⚠⚠⚠Ocurrio error con tu email o password');
-        },
-      );
+    this.authService.sendCredentials(email, password).subscribe(
+      (response) => {
+        const { tokenSession, usuarioDB } = response;
+        this.cookie.set('token', tokenSession, 4, '/');
+        localStorage.setItem('USERNAME', usuarioDB.name);
+        localStorage.setItem('USERID', usuarioDB._id);
+        this.router.navigate(['/', 'tracks']);
+      },
+      (error) => {
+        this.errorSession = true;
+        console.error('Authentication failed:', error);
+      }
+    );
   }
 
-  togglePasswordVisibility():void {
+  togglePasswordVisibility(): void {
     this.passwordFieldType =
       this.passwordFieldType === 'password' ? 'text' : 'password';
   }
