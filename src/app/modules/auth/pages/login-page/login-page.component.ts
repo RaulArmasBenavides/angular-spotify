@@ -61,7 +61,7 @@ export class LoginPageComponent implements OnInit {
       );
   }
 
-  togglePasswordVisibility() {
+  togglePasswordVisibility():void {
     this.passwordFieldType =
       this.passwordFieldType === 'password' ? 'text' : 'password';
   }
