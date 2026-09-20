@@ -9,7 +9,7 @@ import { InjectSessionInterceptor } from '@core/interceptors/inject-session.inte
 @NgModule({ declarations: [
         AppComponent,
     ],
-    bootstrap: [AppComponent], imports: [//TODO: Solo se importan otros modules
+    bootstrap: [AppComponent], imports: [
         BrowserModule,
         AppRoutingModule], providers: [
         CookieService,

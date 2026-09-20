@@ -4,45 +4,50 @@ import { AuthService } from './auth.service';
 import * as mockRaw from '../../../data/user.json'
 import { of } from 'rxjs';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { AppStateService } from '@core/store/app-state.service';
 
 describe('AuthService', () => {
   let service: AuthService;
   let mockUser: any = (mockRaw as any).default;
   let httpClientSpy: { post: jasmine.Spy }
+  let appStateSpy: jasmine.SpyObj<AppStateService>;
 
   beforeEach(() => {
+    const appStateSpyObj = jasmine.createSpyObj('AppStateService', ['setAuthenticated', 'logout']);
+
     TestBed.configureTestingModule({
     imports: [],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    providers: [
+      provideHttpClient(withInterceptorsFromDi()),
+      provideHttpClientTesting(),
+      { provide: AppStateService, useValue: appStateSpyObj }
+    ]
 });
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post'])
-    service = new AuthService(httpClientSpy as any)
+    appStateSpy = appStateSpyObj;
+    service = new AuthService(httpClientSpy as any, appStateSpy)
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  //TODO: Prueba del sendCredentials
-
   it('Debe de retornar un objecto con "data" y "tokenSession"',
     (done: DoneFn) => {
-
-      //TODO: Arrange
 
       const user: any = mockUser.userOk
       const mockResponse = {
         data: {},
-        tokenSession: '0x0x0x'
+        tokenSession: '0x0x0x',
+        usuarioDB: { _id: '1', name: 'Test User' }
       }
 
       httpClientSpy.post.and.returnValue(
-        of(mockResponse) //TODO: ✔✔✔ ya es observable
+        of(mockResponse)
       )
 
-      //TODO: Act
       service.sendCredentials(user.email, user.password)
-        .subscribe(responseApi => {//TODO ['data','tokenSession']
+        .subscribe(responseApi => {
           const getProperties = Object.keys(responseApi)
           expect(getProperties).toContain('data')
           expect(getProperties).toContain('tokenSession')
@@ -50,19 +55,5 @@ describe('AuthService', () => {
         })
 
     })
-
-
-  it('TEST de suma de 2 + 3', () => {
-
-    const a = 2
-    const b = 3
-
-
-    const c = service.suma(a, b)
-
-
-    expect(c).toEqual(5)
-
-  })
 
 });

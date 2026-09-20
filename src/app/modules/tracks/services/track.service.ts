@@ -15,11 +15,6 @@ export class TrackService {
 
   }
 
-  /**
-   * 
-   * @returns Devolver todas las canciones
-   */
-
   private skipById(listTracks: TrackModel[], id: number): Promise<TrackModel[]> {
     return new Promise((resolve, reject) => {
       const listTmp = listTracks.filter(a => a._id !== id)
@@ -27,12 +22,7 @@ export class TrackService {
     })
   }
 
-  /**
-   * //TODO {data:[..1,...2,..2]}
-   * 
-   * @returns 
-   */
-  getAllTracks$(): Observable<any> {
+  getAllTracks$(): Observable<TrackModel[]> {
     return this.http.get(`${this.URL}/tracks`)
       .pipe(
         map(({ data }: any) => {
@@ -41,18 +31,10 @@ export class TrackService {
       )
   }
 
-
-  /**
-   * 
-   * @returns Devolver canciones random
-   */
-  getAllRandom$(): Observable<any> {
+  getAllRandom$(): Observable<TrackModel[]> {
     return this.http.get(`${this.URL}/tracks`)
       .pipe(
         mergeMap(({ data }: any) => this.skipById(data, 2)),
-        // map((dataRevertida) => { //TODO aplicar un filter comun de array
-        //   return dataRevertida.filter((track: TrackModel) => track._id !== 1)
-        // })
         catchError((err) => {
           const { status, statusText } = err;
           return of([])

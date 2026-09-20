@@ -18,7 +18,7 @@ const routes: Routes = [
     loadChildren: () => import('@modules/history/history.module').then(m => m.HistoryModule)
   },
   {
-    path: 'home',//TODO 404 cuando no existe la ruta
+    path: 'home',
     redirectTo: '/tracks'
   },
   {

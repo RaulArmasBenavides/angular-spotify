@@ -17,9 +17,10 @@ describe('AppStateService', () => {
   describe('Player State', () => {
     it('should set current track', (done) => {
       const mockTrack: TrackModel = {
-        id: '1',
+        _id: '1',
         name: 'Test Song',
-        artists: [],
+        album: 'Test Album',
+        cover: 'http://example.com/cover.jpg',
         url: 'http://example.com/song.mp3'
       };
 
