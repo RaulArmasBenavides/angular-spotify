@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AppStateService } from '@core/store/app-state.service';
 import { MultimediaService } from '@shared/services/multimedia.service';
 
@@ -8,7 +8,7 @@ import { MultimediaService } from '@shared/services/multimedia.service';
     styleUrls: ['./media-player.component.css'],
     standalone: false
 })
-export class MediaPlayerComponent implements OnInit, OnDestroy {
+export class MediaPlayerComponent implements OnInit {
   @ViewChild('progressBar') progressBar: ElementRef = new ElementRef('');
   @ViewChild('slider') slider!: ElementRef;
 
@@ -27,9 +27,6 @@ export class MediaPlayerComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-  }
-
-  ngOnDestroy(): void {
   }
 
   handlePosition(event: MouseEvent): void {

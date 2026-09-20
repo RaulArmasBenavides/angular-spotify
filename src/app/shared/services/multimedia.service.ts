@@ -1,6 +1,7 @@
 import { TrackModel } from '@core/models/tracks.model';
-import { Injectable } from '@angular/core';
+import { Injectable, DestroyRef } from '@angular/core';
 import { AppStateService } from '@core/store/app-state.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +29,11 @@ export class MultimediaService {
     return this.appState.playerPercentage$;
   }
 
-  constructor(private appState: AppStateService) {
+  constructor(private appState: AppStateService, private destroyRef: DestroyRef) {
     this.audio = new Audio();
-    this.trackInfo$.subscribe(track => {
+    this.trackInfo$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(track => {
       if (track) {
         this.setAudio(track);
       }
