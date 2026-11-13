@@ -22,6 +22,10 @@ export class AuthService {
     );
   }
 
+  register(name: string, email: string, password: string): Observable<any> {
+    return this.http.post(`${this.URL}/auth/register`, { name, email, password });
+  }
+
   private handleLoginSuccess(response: any): void {
     const { tokenSession, usuarioDB } = response;
     this.appState.setAuthenticated(
