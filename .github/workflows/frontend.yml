@@ -53,18 +53,24 @@ jobs:
           aws s3 cp front.zip s3://$BUCKET/releases/front-${GITHUB_SHA}.zip
           aws s3 cp deploy/remote-frontend.ps1 s3://$BUCKET/deploy/remote-frontend.ps1
 
-      - name: Desplegar en FRONT-APP-G2001 (SSM)
+      - name: Desplegar en todas las instancias de GE-FRONT-G2001 (SSM)
         run: |
-          CMD_ID=$(aws ssm send-command --instance-ids "${{ secrets.FRONT_INSTANCE_ID }}" \
-            --document-name AWS-RunPowerShellScript --timeout-seconds 600 \
-            --parameters "commands=[\"Read-S3Object -BucketName $BUCKET -Key front.zip -File C:\front.zip\",\"Read-S3Object -BucketName $BUCKET -Key deploy/remote-frontend.ps1 -File C:\deploy-frontend.ps1\",\"& C:\deploy-frontend.ps1\"]" \
-            --query Command.CommandId --output text)
-          for i in $(seq 1 40); do
-            ST=$(aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ secrets.FRONT_INSTANCE_ID }}" --query Status --output text)
-            case "$ST" in Success) break;; Failed|Cancelled|TimedOut) aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ secrets.FRONT_INSTANCE_ID }}" --query StandardErrorContent --output text; exit 1;; esac
-            sleep 15
+          IDS=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names GE-FRONT-G2001 \
+            --query "AutoScalingGroups[0].Instances[?LifecycleState=='InService'].InstanceId" --output text)
+          echo "instancias: $IDS"
+          for ID in $IDS; do
+            CMD_ID=$(aws ssm send-command --instance-ids "$ID" \
+              --document-name AWS-RunPowerShellScript --timeout-seconds 600 \
+              --parameters "commands=[\"Read-S3Object -BucketName $BUCKET -Key front.zip -File C:/front.zip\",\"Read-S3Object -BucketName $BUCKET -Key deploy/remote-frontend.ps1 -File C:/deploy-frontend.ps1\",\"& C:/deploy-frontend.ps1\"]" \
+              --query Command.CommandId --output text)
+            ST=""
+            for i in $(seq 1 40); do
+              ST=$(aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "$ID" --query Status --output text)
+              case "$ST" in Success) break;; Failed|Cancelled|TimedOut) aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "$ID" --query StandardErrorContent --output text; exit 1;; esac
+              sleep 15
+            done
+            [ "$ST" = Success ] || { echo "timeout en $ID"; exit 1; }
           done
-          [ "$ST" = Success ] || { echo "timeout"; exit 1; }
 
       - name: Verificar salud en el ALB
         run: |
