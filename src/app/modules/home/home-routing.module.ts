@@ -18,6 +18,18 @@ const routes: Routes = [
     loadChildren: () => import('@modules/history/history.module').then(m => m.HistoryModule)
   },
   {
+    path: 'library',
+    loadChildren: () => import('@modules/library/library.module').then(m => m.LibraryModule)
+  },
+  {
+    path: 'account',
+    loadChildren: () => import('@modules/account/account.module').then(m => m.AccountModule)
+  },
+  {
+    path: 'playlists/:id',
+    loadChildren: () => import('@modules/playlists/playlists.module').then(m => m.PlaylistsModule)
+  },
+  {
     path: 'home',
     redirectTo: '/tracks'
   },

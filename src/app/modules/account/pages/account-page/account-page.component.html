@@ -1,0 +1,39 @@
+<div class="account-page">
+  <h1 class="account-title">Cuenta</h1>
+
+  <section class="account-card">
+    <div class="account-avatar">{{ username.charAt(0).toUpperCase() }}</div>
+    <div class="account-info">
+      <span class="account-label">Perfil</span>
+      <h2 class="account-name">{{ username }}</h2>
+      <span class="account-id">ID de usuario: {{ userId }}</span>
+    </div>
+  </section>
+
+  <section class="account-section">
+    <h3>Biblioteca</h3>
+    @if (!confirmReset) {
+      <button class="btn-outline" (click)="askResetPlaylists()">
+        <i class="uil uil-history"></i> Restaurar playlists
+      </button>
+      @if (resetDone) {
+        <p class="account-note">Tus listas se restauraron a las originales.</p>
+      }
+    } @else {
+      <div class="confirm-box">
+        <p>Se borrarán todas tus listas creadas y las 4 listas por defecto quedarán vacías. Tus canciones que te gustan no se borran.</p>
+        <div class="confirm-actions">
+          <button class="btn-danger" (click)="resetPlaylists()">Sí, restaurar</button>
+          <button class="btn-outline" (click)="cancelReset()">Cancelar</button>
+        </div>
+      </div>
+    }
+  </section>
+
+  <section class="account-section">
+    <h3>Seguridad</h3>
+    <button class="btn-logout" (click)="logout()">
+      <i class="uil uil-signout"></i> Cerrar sesión
+    </button>
+  </section>
+</div>

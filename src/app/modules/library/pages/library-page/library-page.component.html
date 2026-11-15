@@ -1,0 +1,42 @@
+<div class="library-page">
+  <header class="library-header">
+    <h1>Tu biblioteca</h1>
+    <button class="btn-create" (click)="createPlaylist()" title="Crear lista" aria-label="Crear lista">
+      <i class="uil uil-plus"></i>
+    </button>
+  </header>
+
+  <div class="library-tools">
+    <input class="library-search"
+           type="text"
+           [ngModel]="filter"
+           (ngModelChange)="onFilter($event)"
+           placeholder="Buscar en tu biblioteca">
+  </div>
+
+  <ul class="library-list">
+    <li class="library-row" (click)="openFavorites()">
+      <div class="row-cover liked">
+        <i class="uil uil-heart"></i>
+      </div>
+      <div class="row-info">
+        <div class="row-title">Canciones que te gustan</div>
+        <div class="row-sub">Lista automática</div>
+      </div>
+    </li>
+
+    @for (playlist of (playlists$ | async) ?? []; track playlist.id) {
+      <li class="library-row" (click)="openPlaylist(playlist.id)">
+        <div class="row-cover">
+          <i class="uil uil-music"></i>
+        </div>
+        <div class="row-info">
+          <div class="row-title">{{ playlist.name }}</div>
+          <div class="row-sub">Lista · {{ playlist.tracks.length }} canciones</div>
+        </div>
+      </li>
+    } @empty {
+      <li class="library-empty">No hay listas que coincidan con tu búsqueda.</li>
+    }
+  </ul>
+</div>

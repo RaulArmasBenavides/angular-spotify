@@ -1,90 +1,73 @@
-<div class="media-player">
-  <div class="media-player--wrapper ">
-    <!--Zona del artista-->
-    <div class="artist player-center">
-      <ng-container *ngTemplateOutlet="artistZone"></ng-container>
-    </div>
-    <!--Zona del reproductor-->
-    <div class="player-controls player-center">
-      <ng-container *ngTemplateOutlet="playerZone"></ng-container>
-    </div>
-    <!--Zona del controles adicionales-->
-    <div class="player-audio player-center">
-      <ng-container *ngTemplateOutlet="playerAudio"></ng-container>
-    </div>
-  </div>
-</div>
+<footer class="media-player">
+  <div class="media-player--grid">
 
-<!-- ZONE TEMPLATES -->
-<ng-template #artistZone>
-  @if (multimediaService.trackInfo$ | async; as mockCover) {
-    <div class="artist-inside">
-      <img [src]="mockCover.cover" alt="" class="cover">
-      <div class="track-info">
-        <h3 class="track-title">{{mockCover.name}}</h3>
-        <h5 class="track-title sub-title">{{mockCover?.album}}</h5>
-      </div>
-      <div class="track-like">
-        <button class="btn-like">
-          <i class="uil uil-heart"></i>
+    <!-- Izquierda: canción actual -->
+    <div class="mp-left">
+      @if (multimediaService.trackInfo$ | async; as track) {
+        <img [src]="track.cover" alt="" class="cover">
+        <div class="track-meta">
+          <div class="track-title">{{ track.name }}</div>
+          <div class="track-subtitle">{{ track.artist?.name }}</div>
+        </div>
+        <button class="btn-icon like"
+                [class.active]="isLiked(track._id)"
+                (click)="toggleLike(track)"
+                [attr.aria-label]="isLiked(track._id) ? 'Quitar de Canciones que te gustan' : 'Me gusta'"
+                title="Me gusta">
+          <i class="uil" [ngClass]="isLiked(track._id) ? 'uil-heart' : 'uil-heart-medical'"></i>
+        </button>
+      }
+    </div>
+
+    <!-- Centro: controles y progreso -->
+    <div class="mp-center">
+      <div class="buttons-media">
+        <button class="btn-icon" title="Anterior">
+          <i class="uil uil-step-backward"></i>
+        </button>
+        <button class="btn-play" (click)="togglePlayer()" [attr.aria-label]="(isPlaying$ | async) ? 'Pausar' : 'Reproducir'">
+          <i class="uil" [ngClass]="(isPlaying$ | async) ? 'uil-pause' : 'uil-play'"></i>
+        </button>
+        <button class="btn-icon" title="Siguiente">
+          <i class="uil uil-step-forward"></i>
         </button>
       </div>
-    </div>
-  }
-</ng-template>
 
-<ng-template #playerZone>
-  <div class="player-controls-inside">
-    <div class="buttons-media">
-      <button class="arrow btn">
-        <i class="uil uil-previous"></i>
-      </button>
-      <button (click)="togglePlayer()" class="play btn">
-                <i [ngClass]="{
-                    'uil-play-circle': !(isPlaying$ | async),
-                    'uil-pause-circle': (isPlaying$ | async)
-                }" class="uil "></i>
-      </button>
-      <button class="arrow btn">
-        <i class="uil uil-step-forward"></i>
-      </button>
-    </div>
-    <div class="media-linetime">
-
-      <div class="time">{{multimediaService.timeElapsed$ | async}}</div>
-      <span #progressBar (click)="handlePosition($event)" class="time-progress">
-        <span class="time-progress-live" [style.width]="(multimediaService.playerPercentage$ | async)+'%'">
+      <div class="media-linetime">
+        <span class="time">{{ multimediaService.timeElapsed$ | async }}</span>
+        <span #progressBar class="progress" (click)="handlePosition($event)">
+          <span class="progress-fill" [style.width.%]="(multimediaService.playerPercentage$ | async) ?? 0"></span>
         </span>
-      </span>
-      <div class="time">{{multimediaService.timeRemaining$ | async}}</div>
+        <span class="time">{{ multimediaService.timeRemaining$ | async }}</span>
+      </div>
     </div>
-  </div>
-</ng-template>
 
-<ng-template #playerAudio>
-  <div class="player-audio-inside">
-    <button class="btn-media">
-      <i class="uil uil-list-ui-alt"></i>
-    </button>
-    <button class="btn-media">
-      <i class="uil uil-boombox"></i>
-    </button>
-    <button class="btn-media" (click)="toggleVolume()">
-            <i [ngClass]="{
-                'uil-volume-mute':volume === 0,
-                'uil-volume':volume>0
-            }" class="uil "></i>
-    </button>
-    <div class="volume-bar" (click)="onBarClick($event)"
-      (mousedown)="onDragStart($event)"
-      (document:mousemove)="onDragMove($event)"
-      (document:mouseup)="onDragEnd($event)"
-      (mouseleave)="onDragEnd($event)"
-      (touchstart)="onDragStart($event)"
-      (document:touchmove)="onDragMove($event)"
-      (document:touchend)="onDragEnd($event)">
-      <div class="volume-progress" [style.width] ="volume + '%'"></div>
-      <div class="volume-slider" [style.left] ="volume + '%'"></div>
+    <!-- Derecha: opciones y volumen -->
+    <div class="mp-right">
+      <button class="btn-icon" title="Letras" [class.active]="lyricsOpen$ | async" (click)="toggleLyrics()">
+        <i class="uil uil-microphone"></i>
+      </button>
+      <button class="btn-icon" title="Cola">
+        <i class="uil uil-list-ui-alt"></i>
+      </button>
+      <button class="btn-icon" title="Dispositivos">
+        <i class="uil uil-boombox"></i>
+      </button>
+      <button class="btn-icon" title="Silenciar" (click)="toggleVolume()">
+        <i class="uil" [ngClass]="volume === 0 ? 'uil-volume-mute' : 'uil-volume'"></i>
+      </button>
+      <div class="volume-bar" (click)="onBarClick($event)"
+        (mousedown)="onDragStart($event)"
+        (document:mousemove)="onDragMove($event)"
+        (document:mouseup)="onDragEnd($event)"
+        (mouseleave)="onDragEnd($event)"
+        (touchstart)="onDragStart($event)"
+        (document:touchmove)="onDragMove($event)"
+        (document:touchend)="onDragEnd($event)">
+        <div class="volume-progress" [style.width.%]="volume"></div>
+        <div class="volume-slider" [style.left.%]="volume"></div>
+      </div>
     </div>
+
   </div>
-</ng-template>
+</footer>

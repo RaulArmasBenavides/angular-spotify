@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { PlaylistDetail } from '@core/models/playlist.model';
-import { TrackService } from '@modules/tracks/services/track.service';
+import { AppStateService } from '@core/store/app-state.service';
 
 @Component({
     selector: 'app-side-bar',
@@ -15,11 +16,13 @@ export class SideBarComponent implements OnInit {
     defaultOptions: Array<any>, accessLink: Array<any>
   } = { defaultOptions: [], accessLink: [] }
 
-  customOptions: Array<any> = []
-  selectedPlaylistDetail: PlaylistDetail | null = null;
+  playlists$: Observable<PlaylistDetail[]>;
+
   constructor(private router: Router,
-    private trackService:TrackService
-  ) { }
+    private appState: AppStateService
+  ) {
+    this.playlists$ = this.appState.playlists$;
+  }
 
   ngOnInit(): void {
     this.mainMenu.defaultOptions = [
@@ -36,15 +39,15 @@ export class SideBarComponent implements OnInit {
       {
         name: 'Tu biblioteca',
         icon: 'uil uil-chart',
-        router: ['/', 'favorites'],
-        // query: { IdUser: 'mundo' }
+        router: ['/', 'library'],
       }
     ]
 
     this.mainMenu.accessLink = [
       {
         name: 'Crear lista',
-        icon: 'uil-plus-square'
+        icon: 'uil-plus-square',
+        action: () => this.createPlaylist()
       },
       {
         name: 'Canciones que te gustan',
@@ -53,42 +56,14 @@ export class SideBarComponent implements OnInit {
         query: { hola: 'mundo' }
       }
     ]
-
-    this.customOptions = [
-      {
-        name: 'Mi lista º1',
-        router: ['/']
-      },
-      {
-        name: 'Mi lista º2',
-        router: ['/']
-      },
-      {
-        name: 'Mi lista º3',
-        router: ['/']
-      },
-      {
-        name: 'Mi lista º4',
-        router: ['/']
-      }
-    ]
-
   }
 
-  goTo($event: any): void {
-    this.router.navigate(['/', 'favorites'], {
-      queryParams: {
-        key1: 'value1',
-        key2: 'value2',
-        key3: 'value3'
-      }
-    })
-    console.log($event)
+  createPlaylist(): void {
+    const playlist = this.appState.createPlaylist();
+    this.onSelectPlaylist(playlist.id);
   }
 
   onSelectPlaylist(playlistId: string): void {
-    this.trackService.getPlaylistDetail(playlistId).subscribe((detail:PlaylistDetail) => {
-      this.selectedPlaylistDetail = detail;
-    });
+    this.router.navigate(['/', 'playlists', playlistId]);
   }
 }

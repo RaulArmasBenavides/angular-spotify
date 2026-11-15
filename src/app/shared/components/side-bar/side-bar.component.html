@@ -2,7 +2,7 @@
   <div><i class="uil uil-ellipsis-h"></i></div>
   <ul class="side-bar__list list-one">
     @for (item of mainMenu.defaultOptions; track item) {
-      <li [routerLink]="item.router" [queryParams]="item.query">
+      <li [routerLink]="item.router" [queryParams]="item.query" routerLinkActive="active">
         <div class="list-wrapper-item">
           <i [ngClass]="['uil',item.icon]"></i>
           <span class="side-bar__list list-label">{{item.name}}</span>
@@ -13,7 +13,7 @@
   <div class="side-bar__separator"></div>
   <ul class="side-bar__list list-two">
     @for (item of mainMenu.accessLink; track item) {
-      <li [routerLink]="item.router" >
+      <li [routerLink]="item.router" (click)="item.action?.()">
         <div class="list-wrapper-item">
           <i [ngClass]="['uil',item.icon]"></i>
           <span class="side-bar__list list-label">{{item.name}}</span>
@@ -22,20 +22,13 @@
     }
   </ul>
   <div class="side-bar__separator line-separator"></div>
-  <!-- <ul class="side-bar__list list-three">
-  <li *ngFor="let item of customOptions">
-    <div class="list-wrapper-item">
-      <span class="side-bar__list list-label">{{item.name}}</span>
-    </div>
-  </li>
-</ul> -->
-<ul class="side-bar__list list-three">
-  @for (item of customOptions; track item) {
-    <li>
-      <div class="list-wrapper-item" (click)="onSelectPlaylist(item.id)">
-        <span class="side-bar__list list-label">{{ item.name }}</span>
-      </div>
-    </li>
-  }
-</ul>
+  <ul class="side-bar__list list-three">
+    @for (item of (playlists$ | async) ?? []; track item.id) {
+      <li>
+        <div class="list-wrapper-item" (click)="onSelectPlaylist(item.id)">
+          <span class="side-bar__list list-label">{{ item.name }}</span>
+        </div>
+      </li>
+    }
+  </ul>
 </div>

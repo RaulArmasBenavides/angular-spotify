@@ -1,5 +1,49 @@
 <div class="favorites-page">
-    <h3>Canciones que te gustan</h3>
-    <app-play-list-header></app-play-list-header>
-    <app-play-list-body></app-play-list-body>
+  <div class="favorites-header">
+    <div class="cover">
+      <i class="uil uil-heart"></i>
+    </div>
+    <div class="content-text">
+      <div class="small-text">Lista automática</div>
+      <h1 class="title">Canciones que te gustan</h1>
+      <h5 class="sub-title">{{ username }} · {{ (liked$ | async)?.length ?? 0 }} canciones</h5>
+    </div>
+  </div>
+
+  <div class="favorites-actions">
+    @if (liked$ | async; as liked) {
+      <button class="btn-play"
+              [disabled]="liked.length === 0"
+              (click)="playFirst(liked)"
+              title="Reproducir">
+        <i class="uil uil-play"></i>
+      </button>
+    }
+  </div>
+
+  <div class="track-table">
+    <div class="track-table-header">
+      <span class="track-index">#</span>
+      <span>Título</span>
+      <span>Álbum</span>
+      <span class="track-duration"><i class="uil uil-clock-eight"></i></span>
+    </div>
+
+    @for (track of (liked$ | async) ?? []; track track._id; let i = $index) {
+      <div class="track-row">
+        <span class="track-index">{{ i + 1 }}</span>
+        <div class="track-info" (click)="play(track)">
+          <div class="track-name">{{ track.name }}</div>
+          <div class="track-details">{{ track.artist?.name }}</div>
+        </div>
+        <span class="track-album">{{ track.album }}</span>
+        <span class="track-duration">
+          {{ formatDuration(track.duration?.end) }}
+          <button class="btn-action" (click)="unlike(track)">Quitar</button>
+        </span>
+      </div>
+    } @empty {
+      <p class="empty">Aún no te gusta ninguna canción. Pulsa el corazón en la barra de reproducción para guardarla aquí.</p>
+    }
+  </div>
 </div>

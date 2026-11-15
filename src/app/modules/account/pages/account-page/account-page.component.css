@@ -1,0 +1,138 @@
+.account-page {
+    min-height: 100vh;
+    padding: 1rem 2rem 3rem;
+    color: var(--color-4);
+    background: linear-gradient(180deg, #3a3a3a 0%, #121212 340px);
+}
+
+.account-title {
+    font-size: 2rem;
+    margin: 1rem 0 1.5rem;
+}
+
+.account-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    max-width: 640px;
+    background: rgba(0, 0, 0, .35);
+    border-radius: var(--border-radius-2);
+}
+
+.account-avatar {
+    width: 6rem;
+    height: 6rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--color-1);
+    color: #000;
+    font-size: 2.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.account-label {
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: .7;
+}
+
+.account-name {
+    margin: .25rem 0;
+    font-size: 1.8rem;
+}
+
+.account-id {
+    font-size: .85rem;
+    color: #b3b3b3;
+    word-break: break-all;
+}
+
+.account-section {
+    max-width: 640px;
+    margin-top: 2rem;
+}
+
+.account-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: .75rem;
+}
+
+.btn-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .6rem 1.4rem;
+    border-radius: 999px;
+    border: solid 1px #727272;
+    background: transparent;
+    color: var(--color-4);
+    font-weight: 600;
+}
+
+.btn-logout:hover {
+    border-color: var(--color-4);
+    transform: scale(1.02);
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .6rem 1.4rem;
+    border-radius: 999px;
+    border: solid 1px #727272;
+    background: transparent;
+    color: var(--color-4);
+    font-weight: 600;
+}
+
+.btn-outline:hover {
+    border-color: var(--color-4);
+}
+
+.account-note {
+    margin-top: .75rem;
+    color: var(--color-1);
+}
+
+.confirm-box {
+    padding: 1rem 1.25rem;
+    max-width: 560px;
+    background: rgba(0, 0, 0, .35);
+    border-radius: var(--border-radius-2);
+}
+
+.confirm-box p {
+    margin-top: 0;
+    color: #b3b3b3;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: .75rem;
+}
+
+.btn-danger {
+    padding: .6rem 1.4rem;
+    border-radius: 999px;
+    border: 0;
+    background: #e91429;
+    color: #fff;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+    .account-page {
+        padding: 1rem 1rem 3rem;
+    }
+
+    .account-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

@@ -1,0 +1,202 @@
+/* Estilo inspirado en la vista de playlist de Spotify: cabecera con degradado,
+   botón verde de reproducir y tabla de canciones con hover. */
+
+.playlist-page {
+    min-height: 100vh;
+    color: var(--color-4);
+    background: linear-gradient(180deg, #5b5b5b 0%, #2a2a2a 300px, rgba(18, 18, 18, 1) 100%);
+}
+
+.playlist-header {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-end;
+    padding: 4rem 2rem 1.5rem;
+}
+
+.playlist-header .cover-mock {
+    width: 12rem;
+    height: 12rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #450af5 0%, #c4efd9 100%);
+    border-radius: 4px;
+    box-shadow: var(--shadow-1);
+    font-size: 4.5rem;
+}
+
+.playlist-header .small-text {
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.playlist-header .title {
+    margin: .25rem 0 .5rem;
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.playlist-header .sub-title {
+    margin: 0;
+    font-weight: 400;
+    opacity: .75;
+}
+
+.playlist-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+}
+
+.btn-play {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-1);
+    color: #000;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--animation-1);
+}
+
+.btn-play:hover:not(:disabled) {
+    transform: scale(1.06);
+}
+
+.btn-play:disabled {
+    opacity: .35;
+    cursor: default;
+}
+
+.track-table {
+    padding: 0 2rem 2rem;
+}
+
+.track-table-header,
+.track-row {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr 1fr 6rem;
+    align-items: center;
+    gap: 1rem;
+    padding: .5rem 1rem;
+}
+
+.track-table-header {
+    font-size: .85rem;
+    opacity: .7;
+    border-bottom: solid 1px var(--color-2);
+    margin-bottom: .5rem;
+}
+
+.track-row {
+    border-radius: var(--border-radius-2);
+    cursor: default;
+}
+
+.track-row:hover {
+    background-color: rgba(255, 255, 255, .1);
+}
+
+.track-row .track-index {
+    text-align: center;
+    color: #b3b3b3;
+}
+
+.track-row:hover .track-index {
+    color: var(--color-4);
+}
+
+.track-info {
+    min-width: 0;
+    cursor: pointer;
+}
+
+.track-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-details {
+    font-size: .85rem;
+    color: #b3b3b3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-album {
+    color: #b3b3b3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-duration {
+    text-align: right;
+    color: #b3b3b3;
+    display: flex;
+    justify-content: flex-end;
+    gap: .75rem;
+    align-items: center;
+}
+
+.btn-action {
+    background: transparent;
+    color: #b3b3b3;
+    border: none;
+    font-size: .8rem;
+    opacity: 0;
+    transition: opacity var(--animation-1);
+}
+
+.track-row:hover .btn-action {
+    opacity: 1;
+}
+
+.btn-action:hover {
+    color: var(--color-4);
+}
+
+.playlist-add {
+    padding: 0 2rem 3rem;
+}
+
+.playlist-add h3 {
+    font-size: 1.4rem;
+    margin: 1rem 0;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 24rem;
+    padding: .6rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 999px;
+    border: none;
+    background: var(--color-2);
+    color: var(--color-4);
+    font-size: .95rem;
+}
+
+.search-input:focus {
+    outline: 2px solid var(--color-4);
+}
+
+.empty {
+    padding: 1rem;
+    color: #b3b3b3;
+}
+
+.not-found {
+    padding: 4rem 2rem;
+}

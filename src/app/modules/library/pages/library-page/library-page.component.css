@@ -1,0 +1,107 @@
+.library-page {
+    min-height: 100vh;
+    padding: 1.5rem 2rem 3rem;
+    color: var(--color-4);
+    background: linear-gradient(180deg, #2a2a2a 0%, #121212 300px);
+}
+
+.library-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.library-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.btn-create {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 0;
+    background: var(--color-2);
+    color: var(--color-4);
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-create:hover {
+    background: #4d4d4d;
+}
+
+.library-search {
+    width: 100%;
+    max-width: 22rem;
+    padding: .55rem 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-2);
+    color: var(--color-4);
+}
+
+.library-search:focus {
+    outline: 2px solid var(--color-4);
+}
+
+.library-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.library-row {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    padding: .55rem .6rem;
+    border-radius: var(--border-radius-2);
+    cursor: pointer;
+}
+
+.library-row:hover {
+    background: rgba(255, 255, 255, .08);
+}
+
+.row-cover {
+    width: 3.5rem;
+    height: 3.5rem;
+    flex-shrink: 0;
+    border-radius: var(--border-radius-1);
+    background: var(--color-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.row-cover.liked {
+    background: linear-gradient(135deg, #450af5 0%, #c4efd9 100%);
+    color: #fff;
+}
+
+.row-info {
+    min-width: 0;
+}
+
+.row-title {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.row-sub {
+    font-size: .85rem;
+    color: #b3b3b3;
+}
+
+.library-empty {
+    padding: 1rem .6rem;
+    color: #b3b3b3;
+}

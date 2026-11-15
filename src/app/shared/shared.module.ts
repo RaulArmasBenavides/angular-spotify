@@ -10,6 +10,7 @@ import { PlayListHeaderComponent } from './components/play-list-header/play-list
 import { PlayListBodyComponent } from './components/play-list-body/play-list-body.component';
 import { OrderListPipe } from './pipe/order-list.pipe';
 import { ImgBrokenDirective } from './directives/img-broken.directive';
+import { LyricsPanelComponent } from './components/lyrics-panel/lyrics-panel.component';
 
 
 
@@ -23,8 +24,8 @@ import { ImgBrokenDirective } from './directives/img-broken.directive';
     PlayListHeaderComponent,
     PlayListBodyComponent,
     OrderListPipe,
-    ImgBrokenDirective
-
+    ImgBrokenDirective,
+    LyricsPanelComponent
   ],
   imports: [
     CommonModule,
@@ -39,7 +40,8 @@ import { ImgBrokenDirective } from './directives/img-broken.directive';
     PlayListHeaderComponent,
     PlayListBodyComponent,
     OrderListPipe,
-    ImgBrokenDirective
+    ImgBrokenDirective,
+    LyricsPanelComponent
   ]
 })
 export class SharedModule { }

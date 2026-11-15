@@ -1,0 +1,76 @@
+@if (playlist$ | async; as playlist) {
+  <div class="playlist-page">
+    <div class="playlist-header">
+      <div class="cover-mock">
+        <i class="uil uil-music"></i>
+      </div>
+      <div class="content-text">
+        <div class="small-text">Lista</div>
+        <h1 class="title">{{ playlist.name }}</h1>
+        <h5 class="sub-title">{{ playlist.tracks.length }} canciones</h5>
+      </div>
+    </div>
+
+    <div class="playlist-actions">
+      <button class="btn-play"
+              [disabled]="playlist.tracks.length === 0"
+              (click)="play(playlist.tracks[0])"
+              title="Reproducir">
+        <i class="uil uil-play"></i>
+      </button>
+    </div>
+
+    <div class="track-table">
+      <div class="track-table-header">
+        <span class="track-index">#</span>
+        <span>Título</span>
+        <span>Álbum</span>
+        <span class="track-duration"><i class="uil uil-clock-eight"></i></span>
+      </div>
+
+      @for (track of playlist.tracks; track track._id; let i = $index) {
+        <div class="track-row">
+          <span class="track-index">{{ i + 1 }}</span>
+          <div class="track-info" (click)="play(track)">
+            <div class="track-name">{{ track.name }}</div>
+            <div class="track-details">{{ track.artist?.name }}</div>
+          </div>
+          <span class="track-album">{{ track.album }}</span>
+          <span class="track-duration">
+            {{ formatDuration(track.duration?.end) }}
+            <button class="btn-action" (click)="removeTrack(playlist.id, track._id)">Quitar</button>
+          </span>
+        </div>
+      } @empty {
+        <p class="empty">Esta lista todavía no tiene canciones. Busca abajo para añadir.</p>
+      }
+    </div>
+
+    <div class="playlist-add">
+      <h3>Buscar canciones</h3>
+      <input class="search-input"
+             type="text"
+             [ngModel]="searchTerm"
+             (ngModelChange)="onSearch($event)"
+             placeholder="Busca canciones o artistas (mín. 3 letras)">
+
+      @for (track of (searchResults$ | async) ?? []; track track._id) {
+        <div class="track-row">
+          <span class="track-index"><i class="uil uil-music"></i></span>
+          <div class="track-info">
+            <div class="track-name">{{ track.name }}</div>
+            <div class="track-details">{{ track.artist?.name }}</div>
+          </div>
+          <span class="track-album">{{ track.album }}</span>
+          <span class="track-duration">
+            <button class="btn-action" (click)="addTrack(playlist.id, track)">Añadir</button>
+          </span>
+        </div>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="playlist-page not-found">
+    <p>Lista no encontrada.</p>
+  </div>
+}

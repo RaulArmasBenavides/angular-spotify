@@ -1,1 +1,30 @@
-<p>header-user works!</p>
+<header class="top-bar">
+  <div class="user-menu">
+    <button class="avatar-btn"
+            (click)="toggleMenu()"
+            [attr.aria-expanded]="menuOpen"
+            aria-label="Menú de usuario">
+      <span class="avatar">{{ initial }}</span>
+    </button>
+
+    @if (menuOpen) {
+      <div class="menu-backdrop" (click)="closeMenu()"></div>
+      <ul class="user-dropdown">
+        <li class="dropdown-header">
+          <span class="dropdown-name">{{ username }}</span>
+        </li>
+        <li>
+          <button class="dropdown-item" (click)="goToAccount()">
+            <i class="uil uil-user"></i> Cuenta
+          </button>
+        </li>
+        <li class="dropdown-separator"></li>
+        <li>
+          <button class="dropdown-item" (click)="logout()">
+            <i class="uil uil-signout"></i> Cerrar sesión
+          </button>
+        </li>
+      </ul>
+    }
+  </div>
+</header>

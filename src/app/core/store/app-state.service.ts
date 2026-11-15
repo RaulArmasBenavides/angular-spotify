@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AppState, initialAppState, PlayerState, AuthState, SearchState } from './app.state';
 import { TrackModel } from '../models/tracks.model';
+import { PlaylistDetail } from '../models/playlist.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,19 @@ export class AppStateService {
 
   private searchHistorySubject$ = new BehaviorSubject<string[]>([]);
   searchHistory$: Observable<string[]> = this.searchHistorySubject$.asObservable();
+
+  // Playlists: se guardan en localStorage porque la API aún no tiene endpoints de playlists
+  // Datos por usuario (playlists y me gusta) guardados en localStorage
+  private currentUserId: string | null = this.readStoredUserId();
+  private playlistsSubject$ = new BehaviorSubject<PlaylistDetail[]>(this.loadPlaylists());
+  playlists$: Observable<PlaylistDetail[]> = this.playlistsSubject$.asObservable();
+
+  private likedSubject$ = new BehaviorSubject<TrackModel[]>(this.loadLiked());
+  likedTracks$: Observable<TrackModel[]> = this.likedSubject$.asObservable();
+
+  // Panel de letras (abierto/cerrado)
+  private lyricsOpenSubject$ = new BehaviorSubject<boolean>(false);
+  lyricsOpen$: Observable<boolean> = this.lyricsOpenSubject$.asObservable();
 
   constructor() {
   }
@@ -108,6 +122,7 @@ export class AppStateService {
 
   // Auth actions
   setAuthenticated(isAuthenticated: boolean, userId?: string, username?: string, token?: string): void {
+    this.switchUser(isAuthenticated ? userId ?? null : null);
     const state = this.state$.value;
     this.state$.next({
       ...state,
@@ -155,6 +170,133 @@ export class AppStateService {
       search: { ...state.search, history }
     });
     this.searchHistorySubject$.next(history);
+  }
+
+  // Usuario: cada usuario tiene sus propias listas y me gusta
+  private readStoredUserId(): string | null {
+    try {
+      return localStorage.getItem('USERID');
+    } catch {
+      return null;
+    }
+  }
+
+  private switchUser(userId: string | null): void {
+    if (userId === this.currentUserId) {
+      return;
+    }
+    this.currentUserId = userId;
+    this.playlistsSubject$.next(this.loadPlaylists());
+    this.likedSubject$.next(this.loadLiked());
+  }
+
+  private playlistsKey(): string {
+    return `spotify.playlists.${this.currentUserId ?? 'anon'}`;
+  }
+
+  private likedKey(): string {
+    return `spotify.liked.${this.currentUserId ?? 'anon'}`;
+  }
+
+  // Me gusta
+  isLiked(trackId: string | number): boolean {
+    return this.likedSubject$.value.some(t => String(t._id) === String(trackId));
+  }
+
+  toggleLike(track: TrackModel): void {
+    const current = this.likedSubject$.value;
+    const id = String(track._id);
+    const next = current.some(t => String(t._id) === id)
+      ? current.filter(t => String(t._id) !== id)
+      : [...current, track];
+    this.likedSubject$.next(next);
+    try {
+      localStorage.setItem(this.likedKey(), JSON.stringify(next));
+    } catch {
+      // localStorage no disponible: el me gusta sigue en memoria
+    }
+  }
+
+  private loadLiked(): TrackModel[] {
+    try {
+      const raw = localStorage.getItem(this.likedKey());
+      if (raw) {
+        return JSON.parse(raw) as TrackModel[];
+      }
+    } catch {
+      // JSON inválido o localStorage no disponible
+    }
+    return [];
+  }
+
+  // Lyrics actions
+  setLyricsOpen(open: boolean): void {
+    this.lyricsOpenSubject$.next(open);
+  }
+
+  toggleLyrics(): void {
+    this.setLyricsOpen(!this.lyricsOpenSubject$.value);
+  }
+
+  // Playlist actions
+  createPlaylist(name?: string): PlaylistDetail {
+    const current = this.playlistsSubject$.value;
+    const playlist: PlaylistDetail = {
+      id: `lista-${Date.now().toString(36)}`,
+      name: name?.trim() || `Mi lista nº${current.length + 1}`,
+      tracks: []
+    };
+    this.setPlaylists([...current, playlist]);
+    return playlist;
+  }
+
+  getPlaylist(id: string): PlaylistDetail | undefined {
+    return this.playlistsSubject$.value.find(p => p.id === id);
+  }
+
+  addTrackToPlaylist(playlistId: string, track: TrackModel): void {
+    this.updatePlaylist(playlistId, p =>
+      p.tracks.some(t => String(t._id) === String(track._id)) ? p.tracks : [...p.tracks, track]
+    );
+  }
+
+  removeTrackFromPlaylist(playlistId: string, trackId: string | number): void {
+    this.updatePlaylist(playlistId, p => p.tracks.filter(t => String(t._id) !== String(trackId)));
+  }
+
+  private updatePlaylist(playlistId: string, change: (p: PlaylistDetail) => TrackModel[]): void {
+    this.setPlaylists(
+      this.playlistsSubject$.value.map(p => (p.id === playlistId ? { ...p, tracks: change(p) } : p))
+    );
+  }
+
+  resetPlaylists(): void {
+    this.setPlaylists(this.defaultPlaylists());
+  }
+
+  private setPlaylists(playlists: PlaylistDetail[]): void {
+    this.playlistsSubject$.next(playlists);
+    try {
+      localStorage.setItem(this.playlistsKey(), JSON.stringify(playlists));
+    } catch {
+      // localStorage no disponible (modo privado, cookies bloqueadas): la lista sigue en memoria
+    }
+  }
+
+  private loadPlaylists(): PlaylistDetail[] {
+    try {
+      const raw = localStorage.getItem(this.playlistsKey());
+      if (raw) {
+        return JSON.parse(raw) as PlaylistDetail[];
+      }
+    } catch {
+      // JSON inválido o localStorage no disponible: usamos las listas por defecto
+    }
+    return this.defaultPlaylists();
+  }
+
+  private defaultPlaylists(): PlaylistDetail[] {
+    return [1, 2, 3, 4].map(n => ({ id: `mi-lista-${n}`, name: `Mi lista º${n}`, tracks: [] }));
   }
 
   // Reset player state

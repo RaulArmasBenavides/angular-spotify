@@ -1,6 +1,7 @@
 .side-bar {
     width: 15.5rem;
-    height: 100vh;
+    height: calc(100vh - 90px);
+    overflow-y: auto;
     position: fixed;
     top: 0;
     left: 0;
@@ -47,4 +48,24 @@
 
 .side-bar__list li {
     cursor: pointer;
+    border-radius: var(--border-radius-1);
+    transition: color var(--animation-1);
+}
+
+.side-bar__list li:hover {
+    color: var(--color-4);
+    opacity: 1;
+}
+
+.side-bar__list li.active {
+    color: var(--color-4);
+    opacity: 1;
+}
+
+.side-bar__list.list-three .list-wrapper-item span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
 }

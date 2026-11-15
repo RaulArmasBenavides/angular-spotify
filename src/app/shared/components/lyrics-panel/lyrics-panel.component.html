@@ -1,0 +1,35 @@
+@if (open$ | async) {
+  <aside class="lyrics-panel">
+    <header class="lyrics-header">
+      <div class="lyrics-heading">
+        <span class="lyrics-label">Letras</span>
+        @if (track$ | async; as track) {
+          <h3 class="lyrics-title">{{ track.name }}</h3>
+          <span class="lyrics-artist">{{ track.artist?.name }}</span>
+        }
+      </div>
+      <button class="btn-close" (click)="close()" aria-label="Cerrar letras">
+        <i class="uil uil-times"></i>
+      </button>
+    </header>
+
+    <div class="lyrics-body">
+      @if (lyrics$ | async; as state) {
+        @switch (state.status) {
+          @case ('loading') {
+            <p class="lyrics-msg">Buscando letra…</p>
+          }
+          @case ('ok') {
+            <p class="lyrics-text">{{ state.text }}</p>
+          }
+          @case ('none') {
+            <p class="lyrics-msg">No encontramos la letra de esta canción.</p>
+          }
+          @default {
+            <p class="lyrics-msg">Reproduce una canción para ver su letra.</p>
+          }
+        }
+      }
+    </div>
+  </aside>
+}
