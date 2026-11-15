@@ -1,31 +1,49 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { environment } from '@environments/environment';
 import { AppStateService } from '@core/store/app-state.service';
+import { LibraryService } from '@core/services/library.service';
+
+interface UserProfile {
+  id: string;
+  name: string;
+}
 
 /**
- * Datos de sesión del usuario. El login guarda USERNAME/USERID en localStorage
- * y el token en la cookie `token` (ver LoginPageComponent).
+ * Sesión del usuario. El token vive en la cookie `token`; el nombre y el ID
+ * se piden a la API (GET /me/profile). No se guarda nada en localStorage.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
-  private readonly USERNAME_KEY = 'USERNAME';
-  private readonly USERID_KEY = 'USERID';
+  private readonly URL = `${environment.api}/me`;
+  private profile: UserProfile = { id: '—', name: 'Usuario' };
 
   constructor(
     private cookie: CookieService,
     private router: Router,
-    private appState: AppStateService
+    private http: HttpClient,
+    private appState: AppStateService,
+    private library: LibraryService
   ) { }
 
   getUsername(): string {
-    return this.readStorage(this.USERNAME_KEY) ?? 'Usuario';
+    return this.profile.name;
   }
 
   getUserId(): string {
-    return this.readStorage(this.USERID_KEY) ?? '—';
+    return this.profile.id;
+  }
+
+  /** Carga nombre e ID del usuario logueado. */
+  loadProfile(): void {
+    this.http.get<UserProfile>(`${this.URL}/profile`).subscribe({
+      next: profile => this.profile = { id: profile.id, name: profile.name },
+      error: () => { /* sin perfil se muestra "Usuario" */ }
+    });
   }
 
   logout(): void {
@@ -34,25 +52,9 @@ export class SessionService {
     } catch {
       // cookies no disponibles: seguimos limpiando el resto de la sesión
     }
-    this.removeStorage(this.USERNAME_KEY);
-    this.removeStorage(this.USERID_KEY);
+    this.profile = { id: '—', name: 'Usuario' };
+    this.library.clear();
     this.appState.logout();
     this.router.navigate(['/', 'auth']);
-  }
-
-  private readStorage(key: string): string | null {
-    try {
-      return localStorage.getItem(key);
-    } catch {
-      return null;
-    }
-  }
-
-  private removeStorage(key: string): void {
-    try {
-      localStorage.removeItem(key);
-    } catch {
-      // localStorage no disponible
-    }
   }
 }

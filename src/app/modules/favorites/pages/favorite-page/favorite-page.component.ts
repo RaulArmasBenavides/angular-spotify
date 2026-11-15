@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { TrackModel } from '@core/models/tracks.model';
 import { SessionService } from '@core/services/session.service';
 import { AppStateService } from '@core/store/app-state.service';
+import { LibraryService } from '@core/services/library.service';
 
 @Component({
     selector: 'app-favorite-page',
@@ -16,9 +17,10 @@ export class FavoritePageComponent {
 
   constructor(
     private appState: AppStateService,
+    private library: LibraryService,
     private session: SessionService
   ) {
-    this.liked$ = this.appState.likedTracks$;
+    this.liked$ = this.library.likedTracks$;
     this.username = this.session.getUsername();
   }
 
@@ -33,7 +35,7 @@ export class FavoritePageComponent {
   }
 
   unlike(track: TrackModel): void {
-    this.appState.toggleLike(track);
+    this.library.toggleLike(track);
   }
 
   // La API devuelve la duración en segundos; mostramos m:ss

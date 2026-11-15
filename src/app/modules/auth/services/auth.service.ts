@@ -27,7 +27,9 @@ export class AuthService {
   }
 
   private handleLoginSuccess(response: any): void {
-    const { tokenSession, usuarioDB } = response;
+    // El backend devuelve `token`; `tokenSession` queda como respaldo por compatibilidad
+    const usuarioDB = response.usuarioDB;
+    const tokenSession = response.token ?? response.tokenSession;
     this.appState.setAuthenticated(
       true,
       usuarioDB._id,

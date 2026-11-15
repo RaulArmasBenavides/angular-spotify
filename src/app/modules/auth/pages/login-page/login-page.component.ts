@@ -45,10 +45,10 @@ export class LoginPageComponent implements OnInit {
     const { email, password } = this.formLogin.value;
     this.authService.sendCredentials(email, password).subscribe(
       (response) => {
-        const { tokenSession, usuarioDB } = response;
+        // El backend devuelve `token`; `tokenSession` queda como respaldo por compatibilidad
+        const usuarioDB = response.usuarioDB;
+        const tokenSession = response.token ?? response.tokenSession;
         this.cookie.set('token', tokenSession, 4, '/');
-        localStorage.setItem('USERNAME', usuarioDB.name);
-        localStorage.setItem('USERID', usuarioDB._id);
         this.router.navigate(['/', 'tracks']);
       },
       (error) => {

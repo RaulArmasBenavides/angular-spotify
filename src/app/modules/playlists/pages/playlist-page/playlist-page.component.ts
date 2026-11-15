@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { PlaylistDetail } from '@core/models/playlist.model';
 import { TrackModel } from '@core/models/tracks.model';
 import { AppStateService } from '@core/store/app-state.service';
+import { LibraryService } from '@core/services/library.service';
 import { SearchService } from '@modules/history/services/search.service';
 
 @Component({
@@ -21,11 +22,12 @@ export class PlaylistPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private appState: AppStateService,
+    private library: LibraryService,
     private searchService: SearchService
   ) { }
 
   ngOnInit(): void {
-    this.playlist$ = combineLatest([this.route.paramMap, this.appState.playlists$]).pipe(
+    this.playlist$ = combineLatest([this.route.paramMap, this.library.playlists$]).pipe(
       map(([params, playlists]) => playlists.find(p => p.id === params.get('id')))
     );
   }
@@ -39,11 +41,11 @@ export class PlaylistPageComponent implements OnInit {
   }
 
   addTrack(playlistId: string, track: TrackModel): void {
-    this.appState.addTrackToPlaylist(playlistId, track);
+    this.library.addTrackToPlaylist(playlistId, track);
   }
 
   removeTrack(playlistId: string, trackId: string | number): void {
-    this.appState.removeTrackFromPlaylist(playlistId, trackId);
+    this.library.removeTrackFromPlaylist(playlistId, trackId);
   }
 
   play(track: TrackModel): void {
@@ -65,15 +67,15 @@ export class PlaylistPageComponent implements OnInit {
     }
     this.coverError = '';
     this.resizeToDataUrl(file)
-      .then(dataUrl => this.appState.setPlaylistCover(playlistId, dataUrl))
+      .then(dataUrl => this.library.setPlaylistCover(playlistId, dataUrl))
       .catch(() => this.coverError = 'No se pudo procesar la imagen.');
   }
 
   removeCover(playlistId: string): void {
-    this.appState.setPlaylistCover(playlistId, null);
+    this.library.setPlaylistCover(playlistId, null);
   }
 
-  // Recorta al centro y reduce a 320×320 para que quepa en localStorage
+  // Recorta al centro y reduce a 320×320 para que la portada pese poco en MongoDB
   private resizeToDataUrl(file: File, size: number = 320): Promise<string> {
     return new Promise((resolve, reject) => {
       const url = URL.createObjectURL(file);

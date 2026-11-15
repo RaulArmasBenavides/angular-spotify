@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { PlaylistDetail } from '@core/models/playlist.model';
 import { TrackModel } from '@core/models/tracks.model';
 import { AppStateService } from '@core/store/app-state.service';
+import { LibraryService } from '@core/services/library.service';
 
 interface TrackMenuState {
   x: number;
@@ -26,10 +27,11 @@ export class TrackContextMenuComponent {
 
   constructor(
     private appState: AppStateService,
+    private library: LibraryService,
     private router: Router
   ) {
     this.menu$ = this.appState.trackMenu$;
-    this.playlists$ = this.appState.playlists$;
+    this.playlists$ = this.library.playlists$;
   }
 
   @HostListener('document:keydown.escape')
@@ -51,7 +53,7 @@ export class TrackContextMenuComponent {
   }
 
   isLiked(track: TrackModel): boolean {
-    return this.appState.isLiked(track._id);
+    return this.library.isLiked(track._id);
   }
 
   play(track: TrackModel): void {
@@ -60,7 +62,7 @@ export class TrackContextMenuComponent {
   }
 
   toggleLike(track: TrackModel): void {
-    this.appState.toggleLike(track);
+    this.library.toggleLike(track);
     this.close();
   }
 
@@ -81,7 +83,7 @@ export class TrackContextMenuComponent {
   }
 
   addToPlaylist(playlist: PlaylistDetail, track: TrackModel): void {
-    this.appState.addTrackToPlaylist(playlist.id, track);
+    this.library.addTrackToPlaylist(playlist.id, track);
     this.close();
   }
 }

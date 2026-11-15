@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TrackModel } from '@core/models/tracks.model';
 import { AppStateService } from '@core/store/app-state.service';
+import { LibraryService } from '@core/services/library.service';
 import { MultimediaService } from '@shared/services/multimedia.service';
 
 @Component({
@@ -24,7 +25,8 @@ export class MediaPlayerComponent implements OnInit {
 
   constructor(
     public multimediaService: MultimediaService,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private library: LibraryService
   ) { }
 
   ngOnInit(): void {
@@ -48,11 +50,11 @@ export class MediaPlayerComponent implements OnInit {
   }
 
   isLiked(trackId: string | number): boolean {
-    return this.appState.isLiked(trackId);
+    return this.library.isLiked(trackId);
   }
 
   toggleLike(track: TrackModel): void {
-    this.appState.toggleLike(track);
+    this.library.toggleLike(track);
   }
 
   toggleLyrics(): void {

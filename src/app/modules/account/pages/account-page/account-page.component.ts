@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SessionService } from '@core/services/session.service';
-import { AppStateService } from '@core/store/app-state.service';
+import { LibraryService } from '@core/services/library.service';
 
 @Component({
     selector: 'app-account-page',
@@ -16,7 +16,7 @@ export class AccountPageComponent {
 
   constructor(
     private session: SessionService,
-    private appState: AppStateService
+    private library: LibraryService
   ) {
     this.username = this.session.getUsername();
     this.userId = this.session.getUserId();
@@ -36,7 +36,7 @@ export class AccountPageComponent {
   }
 
   resetPlaylists(): void {
-    this.appState.resetPlaylists();
+    this.library.resetPlaylists().subscribe();
     this.confirmReset = false;
     this.resetDone = true;
   }

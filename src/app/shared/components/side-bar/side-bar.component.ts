@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PlaylistDetail } from '@core/models/playlist.model';
-import { AppStateService } from '@core/store/app-state.service';
+import { LibraryService } from '@core/services/library.service';
 
 @Component({
     selector: 'app-side-bar',
@@ -19,9 +19,9 @@ export class SideBarComponent implements OnInit {
   playlists$: Observable<PlaylistDetail[]>;
 
   constructor(private router: Router,
-    private appState: AppStateService
+    private library: LibraryService
   ) {
-    this.playlists$ = this.appState.playlists$;
+    this.playlists$ = this.library.playlists$;
   }
 
   ngOnInit(): void {
@@ -59,8 +59,7 @@ export class SideBarComponent implements OnInit {
   }
 
   createPlaylist(): void {
-    const playlist = this.appState.createPlaylist();
-    this.onSelectPlaylist(playlist.id);
+    this.library.createPlaylist().subscribe(playlist => this.onSelectPlaylist(playlist.id));
   }
 
   onSelectPlaylist(playlistId: string): void {

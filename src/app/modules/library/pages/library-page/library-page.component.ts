@@ -4,6 +4,7 @@ import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PlaylistDetail } from '@core/models/playlist.model';
 import { AppStateService } from '@core/store/app-state.service';
+import { LibraryService } from '@core/services/library.service';
 
 @Component({
     selector: 'app-library-page',
@@ -17,10 +18,10 @@ export class LibraryPageComponent {
   private readonly filterSubject$ = new BehaviorSubject<string>('');
 
   constructor(
-    private appState: AppStateService,
+    private library: LibraryService,
     private router: Router
   ) {
-    this.playlists$ = combineLatest([this.appState.playlists$, this.filterSubject$]).pipe(
+    this.playlists$ = combineLatest([this.library.playlists$, this.filterSubject$]).pipe(
       map(([playlists, filter]) => {
         const query = filter.trim().toLowerCase();
         return query ? playlists.filter(p => p.name.toLowerCase().includes(query)) : playlists;
@@ -34,8 +35,7 @@ export class LibraryPageComponent {
   }
 
   createPlaylist(): void {
-    const playlist = this.appState.createPlaylist();
-    this.openPlaylist(playlist.id);
+    this.library.createPlaylist().subscribe(playlist => this.openPlaylist(playlist.id));
   }
 
   openPlaylist(id: string): void {
