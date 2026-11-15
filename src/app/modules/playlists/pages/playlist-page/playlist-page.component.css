@@ -200,3 +200,65 @@
 .not-found {
     padding: 4rem 2rem;
 }
+
+/* Portada: se puede cambiar la foto haciendo clic */
+.cover-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .4rem;
+}
+
+.playlist-header .cover-mock {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cover-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .25rem;
+    background: rgba(0, 0, 0, .55);
+    font-size: .95rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity var(--animation-1);
+}
+
+.cover-overlay .uil {
+    font-size: 2rem;
+}
+
+.playlist-header .cover-mock:hover .cover-overlay {
+    opacity: 1;
+}
+
+.btn-link {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: #b3b3b3;
+    font-size: .85rem;
+    text-decoration: underline;
+}
+
+.btn-link:hover {
+    color: var(--color-4);
+}
+
+.cover-error {
+    margin: 0;
+    font-size: .85rem;
+    color: #e91429;
+}

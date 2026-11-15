@@ -1,8 +1,26 @@
 @if (playlist$ | async; as playlist) {
   <div class="playlist-page">
     <div class="playlist-header">
-      <div class="cover-mock">
-        <i class="uil uil-music"></i>
+      <div class="cover-wrap">
+        <div class="cover-mock" (click)="coverInput.click()" title="Cambiar foto de la lista">
+          @if (playlist.cover) {
+            <img [src]="playlist.cover" alt="Foto de la lista" class="cover-img">
+          } @else {
+            <i class="uil uil-music"></i>
+          }
+          <div class="cover-overlay">
+            <i class="uil uil-camera"></i>
+            <span>{{ playlist.cover ? 'Cambiar foto' : 'Añadir foto' }}</span>
+          </div>
+        </div>
+        <input #coverInput type="file" accept="image/*" hidden
+               (change)="onCoverSelected(playlist.id, $event)">
+        @if (playlist.cover) {
+          <button class="btn-link" (click)="removeCover(playlist.id)">Quitar foto</button>
+        }
+        @if (coverError) {
+          <p class="cover-error">{{ coverError }}</p>
+        }
       </div>
       <div class="content-text">
         <div class="small-text">Lista</div>
@@ -29,7 +47,7 @@
       </div>
 
       @for (track of playlist.tracks; track track._id; let i = $index) {
-        <div class="track-row">
+        <div class="track-row" [appTrackMenu]="track">
           <span class="track-index">{{ i + 1 }}</span>
           <div class="track-info" (click)="play(track)">
             <div class="track-name">{{ track.name }}</div>
@@ -55,7 +73,7 @@
              placeholder="Busca canciones o artistas (mín. 3 letras)">
 
       @for (track of (searchResults$ | async) ?? []; track track._id) {
-        <div class="track-row">
+        <div class="track-row" [appTrackMenu]="track">
           <span class="track-index"><i class="uil uil-music"></i></span>
           <div class="track-info">
             <div class="track-name">{{ track.name }}</div>

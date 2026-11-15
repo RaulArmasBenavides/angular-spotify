@@ -11,6 +11,8 @@ import { PlayListBodyComponent } from './components/play-list-body/play-list-bod
 import { OrderListPipe } from './pipe/order-list.pipe';
 import { ImgBrokenDirective } from './directives/img-broken.directive';
 import { LyricsPanelComponent } from './components/lyrics-panel/lyrics-panel.component';
+import { TrackContextMenuComponent } from './components/track-context-menu/track-context-menu.component';
+import { TrackContextMenuDirective } from './directives/track-context-menu.directive';
 
 
 
@@ -25,7 +27,9 @@ import { LyricsPanelComponent } from './components/lyrics-panel/lyrics-panel.com
     PlayListBodyComponent,
     OrderListPipe,
     ImgBrokenDirective,
-    LyricsPanelComponent
+    LyricsPanelComponent,
+    TrackContextMenuComponent,
+    TrackContextMenuDirective
   ],
   imports: [
     CommonModule,
@@ -41,7 +45,9 @@ import { LyricsPanelComponent } from './components/lyrics-panel/lyrics-panel.com
     PlayListBodyComponent,
     OrderListPipe,
     ImgBrokenDirective,
-    LyricsPanelComponent
+    LyricsPanelComponent,
+    TrackContextMenuComponent,
+    TrackContextMenuDirective
   ]
 })
 export class SharedModule { }

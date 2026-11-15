@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { PlaylistsRoutingModule } from './playlists-routing.module';
 import { PlaylistPageComponent } from './pages/playlist-page/playlist-page.component';
+import { SharedModule } from '@shared/shared.module';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { PlaylistPageComponent } from './pages/playlist-page/playlist-page.compo
   imports: [
     CommonModule,
     FormsModule,
+    SharedModule,
     PlaylistsRoutingModule
   ]
 })

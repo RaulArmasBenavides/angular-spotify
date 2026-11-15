@@ -80,6 +80,12 @@
     font-size: 1.5rem;
 }
 
+.row-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .row-cover.liked {
     background: linear-gradient(135deg, #450af5 0%, #c4efd9 100%);
     color: #fff;

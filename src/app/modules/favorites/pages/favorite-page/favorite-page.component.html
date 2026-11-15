@@ -30,7 +30,7 @@
     </div>
 
     @for (track of (liked$ | async) ?? []; track track._id; let i = $index) {
-      <div class="track-row">
+      <div class="track-row" [appTrackMenu]="track">
         <span class="track-index">{{ i + 1 }}</span>
         <div class="track-info" (click)="play(track)">
           <div class="track-name">{{ track.name }}</div>

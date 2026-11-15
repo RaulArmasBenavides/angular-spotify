@@ -229,6 +229,18 @@ export class AppStateService {
     return [];
   }
 
+  // Menú contextual de canciones (clic derecho)
+  private trackMenuSubject$ = new BehaviorSubject<{ x: number; y: number; track: TrackModel } | null>(null);
+  trackMenu$: Observable<{ x: number; y: number; track: TrackModel } | null> = this.trackMenuSubject$.asObservable();
+
+  openTrackMenu(track: TrackModel, x: number, y: number): void {
+    this.trackMenuSubject$.next({ x, y, track });
+  }
+
+  closeTrackMenu(): void {
+    this.trackMenuSubject$.next(null);
+  }
+
   // Lyrics actions
   setLyricsOpen(open: boolean): void {
     this.lyricsOpenSubject$.next(open);
@@ -267,6 +279,12 @@ export class AppStateService {
   private updatePlaylist(playlistId: string, change: (p: PlaylistDetail) => TrackModel[]): void {
     this.setPlaylists(
       this.playlistsSubject$.value.map(p => (p.id === playlistId ? { ...p, tracks: change(p) } : p))
+    );
+  }
+
+  setPlaylistCover(playlistId: string, cover: string | null): void {
+    this.setPlaylists(
+      this.playlistsSubject$.value.map(p => (p.id === playlistId ? { ...p, cover: cover ?? undefined } : p))
     );
   }
 

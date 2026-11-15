@@ -28,7 +28,11 @@
     @for (playlist of (playlists$ | async) ?? []; track playlist.id) {
       <li class="library-row" (click)="openPlaylist(playlist.id)">
         <div class="row-cover">
-          <i class="uil uil-music"></i>
+          @if (playlist.cover) {
+            <img [src]="playlist.cover" alt="" class="row-cover-img">
+          } @else {
+            <i class="uil uil-music"></i>
+          }
         </div>
         <div class="row-info">
           <div class="row-title">{{ playlist.name }}</div>

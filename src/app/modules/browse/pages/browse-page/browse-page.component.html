@@ -1,0 +1,51 @@
+@if (view$ | async; as view) {
+  <div class="browse-page">
+    <div class="browse-header">
+      <div class="cover" [class.artist-cover]="view.kind === 'artist'">
+        <i class="uil" [ngClass]="view.kind === 'artist' ? 'uil-user' : 'uil-compact-disc'"></i>
+      </div>
+      <div class="content-text">
+        <div class="small-text">{{ view.kind === 'artist' ? 'Artista' : 'Álbum' }}</div>
+        <h1 class="title">{{ view.name }}</h1>
+        <h5 class="sub-title">
+          @if (view.kind === 'album' && view.artist) {
+            {{ view.artist }} ·
+          }
+          {{ view.tracks.length }} canciones
+        </h5>
+      </div>
+    </div>
+
+    <div class="browse-actions">
+      <button class="btn-play"
+              [disabled]="view.tracks.length === 0"
+              (click)="playFirst(view.tracks)"
+              title="Reproducir">
+        <i class="uil uil-play"></i>
+      </button>
+    </div>
+
+    <div class="track-table">
+      <div class="track-table-header">
+        <span class="track-index">#</span>
+        <span>Título</span>
+        <span>Álbum</span>
+        <span class="track-duration"><i class="uil uil-clock-eight"></i></span>
+      </div>
+
+      @for (track of view.tracks; track track._id; let i = $index) {
+        <div class="track-row" [appTrackMenu]="track">
+          <span class="track-index">{{ i + 1 }}</span>
+          <div class="track-info" (click)="play(track)">
+            <div class="track-name">{{ track.name }}</div>
+            <div class="track-details">{{ track.artist?.name }}</div>
+          </div>
+          <span class="track-album">{{ track.album }}</span>
+          <span class="track-duration">{{ formatDuration(track.duration?.end) }}</span>
+        </div>
+      } @empty {
+        <p class="empty">No encontramos canciones para esta búsqueda.</p>
+      }
+    </div>
+  </div>
+}

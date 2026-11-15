@@ -7,7 +7,7 @@
     <li><i class="uil uil-clock-eight"></i></li>
   </ul>
   @for (track of tracks |orderList:optionSort.property:optionSort.order; track track) {
-    <ul class="play-list-rows" (click)="sendPlay(track)">
+    <ul class="play-list-rows" [appTrackMenu]="track" (click)="sendPlay(track)">
       <li class="track-id">
         {{track._id}}
             <i [ngClass]="{

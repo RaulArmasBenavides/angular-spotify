@@ -18,6 +18,10 @@ const routes: Routes = [
     loadChildren: () => import('@modules/history/history.module').then(m => m.HistoryModule)
   },
   {
+    path: 'browse',
+    loadChildren: () => import('@modules/browse/browse.module').then(m => m.BrowseModule)
+  },
+  {
     path: 'library',
     loadChildren: () => import('@modules/library/library.module').then(m => m.LibraryModule)
   },

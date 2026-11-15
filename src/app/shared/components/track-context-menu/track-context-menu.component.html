@@ -1,0 +1,38 @@
+@if (menu$ | async; as menu) {
+  <div class="menu-backdrop" (click)="close()" (contextmenu)="$event.preventDefault(); close()"></div>
+  <ul class="track-menu" role="menu" [style.left.px]="posX(menu.x)" [style.top.px]="posY(menu.y)">
+    <li>
+      <button (click)="play(menu.track)">
+        <i class="uil uil-play"></i> Reproducir
+      </button>
+    </li>
+    <li>
+      <button (click)="toggleLike(menu.track)">
+        <i class="uil" [ngClass]="isLiked(menu.track) ? 'uil-heart' : 'uil-heart-medical'"></i>
+        {{ isLiked(menu.track) ? 'Quitar de tus me gusta' : 'Me gusta' }}
+      </button>
+    </li>
+    <li class="separator"></li>
+    <li>
+      <button (click)="goToArtist(menu.track)" [disabled]="!menu.track.artist?.name">
+        <i class="uil uil-user"></i> Ir al artista
+      </button>
+    </li>
+    <li>
+      <button (click)="goToAlbum(menu.track)" [disabled]="!menu.track.album">
+        <i class="uil uil-compact-disc"></i> Ir al álbum
+      </button>
+    </li>
+    <li class="separator"></li>
+    <li class="menu-title">Añadir a lista</li>
+    @for (playlist of (playlists$ | async) ?? []; track playlist.id) {
+      <li>
+        <button (click)="addToPlaylist(playlist, menu.track)">
+          <i class="uil uil-music"></i> {{ playlist.name }}
+        </button>
+      </li>
+    } @empty {
+      <li class="menu-empty">No tienes listas todavía</li>
+    }
+  </ul>
+}

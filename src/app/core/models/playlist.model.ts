@@ -10,4 +10,5 @@ export interface CustomPlaylist {
     id: string;
     name: string;
     tracks: TrackModel[];
+    cover?: string;
   }

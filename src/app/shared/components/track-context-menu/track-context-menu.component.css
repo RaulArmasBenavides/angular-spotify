@@ -1,0 +1,61 @@
+.menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+}
+
+.track-menu {
+    position: fixed;
+    z-index: 10;
+    width: 240px;
+    max-height: 360px;
+    overflow-y: auto;
+    margin: 0;
+    padding: .4rem;
+    list-style: none;
+    background: #282828;
+    border-radius: var(--border-radius-2);
+    box-shadow: var(--shadow-1);
+}
+
+.track-menu button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .55rem .7rem;
+    background: transparent;
+    border: 0;
+    border-radius: var(--border-radius-1);
+    color: var(--color-4);
+    font-size: .9rem;
+    text-align: left;
+}
+
+.track-menu button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, .1);
+}
+
+.track-menu button:disabled {
+    opacity: .4;
+    cursor: default;
+}
+
+.track-menu .separator {
+    border-bottom: solid 1px #4d4d4d;
+    margin: .3rem 0;
+}
+
+.track-menu .menu-title {
+    padding: .4rem .7rem;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #b3b3b3;
+}
+
+.track-menu .menu-empty {
+    padding: .4rem .7rem;
+    font-size: .85rem;
+    color: #b3b3b3;
+}
